@@ -1,0 +1,65 @@
+Diagramme de classes UML pour le système MIY
+
+Classes principales :
+
+1. User
+   - Attributs :
+     - username: str
+     - password_hash: str
+     - email: str (optionnel)
+     - created_at: datetime
+     - accounts: list[Account]
+   - Méthodes :
+     - __init__(username, password, email)
+     - _hash_password(password): str
+     - check_password(password): bool
+     - to_dict(): dict
+     - from_dict(data): User
+
+2. Account
+   - Attributs :
+     - account_id: str
+     - user: User
+     - balance: float
+     - status: str ('active', 'frozen', etc.)
+     - created_at: datetime
+     - transactions: list[Transaction]
+   - Méthodes :
+     - __init__(account_id, user, balance, status)
+     - deposit(amount): bool
+     - withdraw(amount): bool
+     - to_dict(): dict
+     - from_dict(data, user): Account
+
+3. Transaction
+   - Attributs :
+     - transaction_id: str
+     - account: Account
+     - amount: float
+     - transaction_type: str ('deposit', 'withdraw', 'transfer')
+     - description: str
+     - timestamp: datetime
+   - Méthodes :
+     - __init__(transaction_id, account, amount, transaction_type, description)
+     - to_dict(): dict
+     - from_dict(data, account): Transaction
+     - calculate_duration(): float
+
+4. Storage
+   - Attributs :
+     - db_path: str
+   - Méthodes :
+     - __init__(db_path)
+     - _init_db()
+     - save_user(user)
+     - load_user(username): User
+     - save_account(account)
+     - load_accounts_for_user(username): list[Account]
+     - save_transaction(transaction)
+     - load_transactions_for_account(account_id): list[Transaction]
+     - update_balance(account_id)
+
+Relations :
+- User --* Account (un utilisateur peut avoir plusieurs comptes)
+- Account --* Transaction (un compte peut avoir plusieurs transactions)
+- Storage utilise toutes les classes pour la persistance
