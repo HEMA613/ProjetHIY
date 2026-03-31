@@ -1,0 +1,9 @@
+# Vacation Manager Backend Requirements
+
+# No external dependencies for the backend
+# Uses Python standard library only:
+# - sqlite3 (database)
+# - dataclasses (data models)
+# - datetime (date/time handling)
+# - enum (status enumerations)
+# - typing (type hints)
