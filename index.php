@@ -41,7 +41,7 @@ $vacations = load_vacations();
         </section>
     </main>
     <footer>
-        <p>&copy; 2024 HIY - Système de Gestion des Congés</p>
+        <p>&copy; 2026 HIY - Système de Gestion des Congés</p>
     </footer>
 </body>
 </html>
