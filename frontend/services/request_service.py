@@ -1,6 +1,7 @@
 from models.request import VacationRequest
 from services.vacation_service import VacationService
 
+
 class RequestService:
     def __init__(self):
         self.requests = []
@@ -25,3 +26,16 @@ class RequestService:
 
         self.requests.append(request)
         return request
+
+    def approve_request(self, request, employee):
+        if request.status != "PENDING":
+            raise ValueError("Demande déjà traitée")
+
+        employee.vacation_balance -= request.days
+        request.status = "APPROVED"
+
+    def reject_request(self, request):
+        if request.status != "PENDING":
+            raise ValueError("Demande déjà traitée")
+
+        request.status = "REJECTED"

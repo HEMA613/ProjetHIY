@@ -14,3 +14,5 @@ class VacationService:
     @staticmethod
     def has_enough_balance(balance: int, requested_days: int):
         return balance >= requested_days
+
+        

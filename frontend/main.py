@@ -301,3 +301,21 @@ if __name__ == "__main__":
     root = tk.Tk()
     app = VacationManager(root)
     root.mainloop()
+
+    from datetime import date
+from models.employee import Employee
+from services.request_service import RequestService
+
+employee = Employee(1, "Sarah", "sarah@test.com", "EMPLOYEE", 10)
+
+service = RequestService()
+
+request = service.submit_request(
+    employee,
+    1,
+    date(2026, 4, 10),
+    date(2026, 4, 12),
+    "Family vacation"
+)
+
+print(request)
