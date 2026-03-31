@@ -71,16 +71,9 @@ class VacationManager:
                 return json.load(f)
         # Employés par défaut
         return [
-            {'id': 1, 'name': 'Alice Dupont'},
-            {'id': 2, 'name': 'Bob Martin'},
-            {'id': 3, 'name': 'Claire Bernard'},
-            {'id': 4, 'name': 'David Petit'},
-            {'id': 5, 'name': 'Emma Moreau'},
-            {'id': 6, 'name': 'François Durand'},
-            {'id': 7, 'name': 'Gabrielle Leroy'},
-            {'id': 8, 'name': 'Henri Simon'},
-            {'id': 9, 'name': 'Isabelle Michel'},
-            {'id': 10, 'name': 'Jean Lefebvre'}
+            {'id': 1, 'name': 'SUTHAHER Hemadhuran'},
+            {'id': 2, 'name': 'ALI YOUSSOUF'},
+        
         ]
 
     def save_employees(self):
