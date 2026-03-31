@@ -1,7 +1,7 @@
 # ProjetHIY
 Miniprojet de Illam, Ali, Hemadhuran
 
-Créer un site pour HIY pour faire gestion de congés avec 10 personnes dans l'entreprise.
+Créer une application de gestion de congés pour HIY avec 10 personnes dans l'entreprise.
 
 ## Fonctionnalités
 - Gestion des employés (ajouter/supprimer)
@@ -11,27 +11,24 @@ Créer un site pour HIY pour faire gestion de congés avec 10 personnes dans l'e
 - Tableau de bord avec statistiques
 
 ## Technologies
-- PHP pour le backend
-- HTML/CSS pour le frontend
+- Python avec Tkinter pour l'interface graphique
 - JSON pour le stockage des données
 
 ## Fichiers
-- `index.php` : Page d'accueil avec tableau de bord
-- `employees.php` : Gestion des employés
-- `vacations.php` : Gestion des demandes de congés
-- `calendar.php` : Calendrier des congés
-- `data.php` : Fonctions de gestion des données
-- `index.css` : Styles CSS
+- `main.py` : Application principale
 - `employees.json` : Données des employés
 - `vacations.json` : Données des congés
 
 ## Installation
-1. Assurez-vous que PHP est installé sur votre serveur.
-2. Placez tous les fichiers dans le répertoire web.
-3. Accédez à `index.php` dans votre navigateur.
+1. Assurez-vous que Python est installé (version 3.6+).
+2. Tkinter est généralement inclus avec Python. Si nécessaire, installez-le avec `pip install tk`.
+3. Exécutez `python main.py` pour lancer l'application.
 
 ## Utilisation
-- Ajoutez des employés via la page Employés.
-- Les employés peuvent demander des congés via la page Demandes de Congé.
-- Approuvez ou rejetez les demandes depuis la même page.
+- Le menu permet d'accéder aux différentes fonctionnalités.
+- Ajoutez des employés via le menu Employés > Voir Employés.
+- Les employés peuvent demander des congés via le menu Congés > Demander Congé.
+- Approuvez ou rejetez les demandes depuis Congés > Voir Demandes.
+- Consultez le calendrier des congés approuvés via Congés > Calendrier.
+- Approuvez ou rejetez les demandes depuis la vue des demandes.
 - Consultez le calendrier pour voir les congés approuvés.
