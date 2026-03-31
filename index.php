@@ -1,3 +1,8 @@
+<?php
+include 'data.php';
+$employees = load_employees();
+$vacations = load_vacations();
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -22,15 +27,15 @@
             <div class="stats">
                 <div class="stat">
                     <h3>Nombre d'Employés</h3>
-                    <p id="employee-count">10</p>
+                    <p><?php echo count($employees); ?></p>
                 </div>
                 <div class="stat">
                     <h3>Demandes en Attente</h3>
-                    <p id="pending-requests">0</p>
+                    <p><?php echo count(array_filter($vacations, function($v) { return $v['status'] == 'pending'; })); ?></p>
                 </div>
                 <div class="stat">
                     <h3>Congés Approuvés</h3>
-                    <p id="approved-vacations">0</p>
+                    <p><?php echo count(array_filter($vacations, function($v) { return $v['status'] == 'approved'; })); ?></p>
                 </div>
             </div>
         </section>
@@ -38,6 +43,5 @@
     <footer>
         <p>&copy; 2024 HIY - Système de Gestion des Congés</p>
     </footer>
-    <script src="script.js"></script>
 </body>
 </html>
