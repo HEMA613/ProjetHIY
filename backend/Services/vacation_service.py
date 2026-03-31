@@ -22,6 +22,167 @@ class VacationService:
         """
         self.db = db_manager
 
+    def validate_dates(self, start_date, end_date) -> bool:
+        """
+        Valide que les dates sont correctes.
+        
+        Args:
+            start_date: Date de début
+            end_date: Date de fin
+            
+        Returns:
+            True si dates valides, False sinon
+        """
+        from datetime import date
+        today = date.today()
+        
+        # Vérifier que start_date et end_date sont des objets date
+        if isinstance(start_date, datetime):
+            start_date = start_date.date()
+        if isinstance(end_date, datetime):
+            end_date = end_date.date()
+        
+        # Vérifier que les dates ne sont pas dans le passé
+        if start_date < today or end_date < today:
+            return False
+        
+        # Vérifier que début < fin
+        if start_date >= end_date:
+            return False
+        
+        return True
+
+    def calculate_days(self, start_date, end_date) -> int:
+        """
+        Calcule le nombre de jours entre deux dates.
+        
+        Args:
+            start_date: Date de début
+            end_date: Date de fin
+            
+        Returns:
+            Nombre de jours (hors week-ends et jours fériés)
+        """
+        from datetime import date, timedelta
+        
+        # Convertir en date si nécessaire
+        if isinstance(start_date, datetime):
+            start_date = start_date.date()
+        if isinstance(end_date, datetime):
+            end_date = end_date.date()
+        
+        # Compter les jours ouvrables (lundi à vendredi)
+        days = 0
+        current = start_date
+        
+        while current <= end_date:
+            # 0-4 = lundi-vendredi, 5-6 = samedi-dimanche
+            if current.weekday() < 5:
+                days += 1
+            current += timedelta(days=1)
+        
+        return max(1, days - 1)  # Exclure le dernier jour
+
+    def has_enough_balance(self, employee, days_needed: int) -> bool:
+        """
+        Vérifie si l'employé a assez de jours de congés disponibles.
+        
+        Args:
+            employee: Objet Employee
+            days_needed: Nombre de jours nécessaires
+            
+        Returns:
+            True si assez de solde, False sinon
+        """
+        available = employee.vacation_balance - employee.vacation_used
+        return available >= days_needed
+
+    def approve_request(self, request_id: int, approved_by: str = "admin") -> bool:
+        """
+        Approuve une demande de congés.
+        
+        Args:
+            request_id: ID de la demande
+            approved_by: Username de l'approbateur
+            
+        Returns:
+            True si succès
+        """
+        vacation_request = self.db.get_vacation_request_by_id(request_id)
+        if not vacation_request or vacation_request.status != VacationStatus.PENDING:
+            return False
+
+        # Utiliser les jours de congés
+        employee = self.db.get_employee_by_id(vacation_request.employee_id)
+        if not employee:
+            return False
+
+        # Mettre à jour le statut
+        self.db.update_vacation_request_status(
+            request_id,
+            VacationStatus.APPROVED,
+            approved_by=employee.user_id  # Utiliser l'admin ID
+        )
+
+        # Utiliser les jours de congés de l'employé
+        employee.use_vacation_days(vacation_request.days_count)
+        self.db.update_employee_vacation(vacation_request.employee_id, employee.vacation_used)
+
+        return True
+
+    def reject_request(self, request_id: int, reason: str = "") -> bool:
+        """
+        Rejette une demande de congés.
+        
+        Args:
+            request_id: ID de la demande
+            reason: Motif du rejet
+            
+        Returns:
+            True si succès
+        """
+        vacation_request = self.db.get_vacation_request_by_id(request_id)
+        if not vacation_request or vacation_request.status != VacationStatus.PENDING:
+            return False
+
+        # Mettre à jour le statut
+        self.db.update_vacation_request_status(
+            request_id,
+            VacationStatus.REJECTED,
+            rejection_reason=reason
+        )
+
+        return True
+
+    def cancel_request(self, request_id: int) -> bool:
+        """
+        Annule une demande de congés approuvée.
+        
+        Args:
+            request_id: ID de la demande
+            
+        Returns:
+            True si succès
+        """
+        vacation_request = self.db.get_vacation_request_by_id(request_id)
+        if not vacation_request:
+            return False
+
+        # Si la demande est approuvée, rembourser les jours
+        if vacation_request.status == VacationStatus.APPROVED:
+            employee = self.db.get_employee_by_id(vacation_request.employee_id)
+            if employee:
+                employee.refund_vacation_days(vacation_request.days_count)
+                self.db.update_employee_vacation(vacation_request.employee_id, employee.vacation_used)
+
+        # Mettre à jour le statut
+        self.db.update_vacation_request_status(
+            request_id,
+            VacationStatus.CANCELLED
+        )
+
+        return True
+
     def submit_vacation_request(self, employee_id: int, start_date: datetime, end_date: datetime, reason: str) -> Optional[VacationRequest]:
         """
         Soumet une demande de congés.
