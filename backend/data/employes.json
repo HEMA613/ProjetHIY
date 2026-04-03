@@ -4,7 +4,7 @@
         "name": "Jean Dupont",
         "email": "jean@gmail.com",
         "password": "jean123",
-        "vacation_balance": 25,
+        "vacation_balance": 20,
         "role": "employee"
     },
     {
@@ -12,15 +12,7 @@
         "name": "Marie Martin",
         "email": "marie@gmail.com",
         "password": "marie123",
-        "vacation_balance": 20,
-        "role": "employee"
-    },
-    {
-        "id": 3,
-        "name": "Paul Bernard",
-        "email": "paul@gmail.com",
-        "password": "paul123",
-        "vacation_balance": 15,
+        "vacation_balance": 10,
         "role": "employee"
     }
 ]
