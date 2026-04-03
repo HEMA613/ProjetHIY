@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 #c'est qu'un doissier test ne pas l'effacer
 # Ajoute les composant:
 
@@ -8,6 +9,7 @@ import os
 from datetime import datetime, date
 import calendar
 
+<<<<<<< HEAD
 # Form de connexion
 class LoginForm(tk.Tk):
     def __init__(self):
@@ -36,3 +38,20 @@ class LoginForm(tk.Tk):
             MainApp()  # Open the main application
         else:
             messagebox.showerror("Error", "Invalid credentials")
+=======
+
+# 1. Importation des modules
+
+# 2. Initialisation des données
+
+# 3. Création des menus d'affichage
+
+# 4. Gestion des entrées (Saisie utilisateur)
+
+# 5. Boucle de contrôle principale (while True)
+
+# 6. Gestion des erreurs d'affichage
+
+=======
+>>>>>>> Stashed changes
+>>>>>>> 514c1133f02e441f0c5f67545e4a9cf89740591a
