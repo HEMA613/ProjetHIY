@@ -2,8 +2,8 @@
     {
         "id": 1,
         "name": "Administrateur",
-        "email": "admin@gmail.com",
-        "password": "admin123",
+        "email": "manager@gmail.com",
+        "password": "manager123",
         "role": "manager"
     }
 ]
