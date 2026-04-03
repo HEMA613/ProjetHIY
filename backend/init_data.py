@@ -1,5 +1,5 @@
-from Admin import Admin
-from Utilisateur import Utilisateur
+from admin import Admin
+from utilisateur import Utilisateur
 
 print("🚀 Initialisation des données...")
 
@@ -21,8 +21,7 @@ for admin in admins:
 
 employes = [
     Utilisateur(id=1, name="Jean Dupont",   email="jean@gmail.com",   password="jean123",   vacation_balance=25),
-    Utilisateur(id=2, name="Marie Martin",  email="marie@gmail.com",  password="marie123",  vacation_balance=20),
-    Utilisateur(id=3, name="Paul Bernard",  email="paul@gmail.com",   password="paul123",   vacation_balance=15),
+
 ]
 
 for emp in employes:
@@ -34,5 +33,4 @@ print("📁 Fichiers générés : data/admins.json | data/employes.json")
 print("\n--- IDENTIFIANTS ---")
 print("👑 Admin    : admin@gmail.com  / admin123")
 print("👤 Employé 1: jean@gmail.com   / jean123")
-print("👤 Employé 2: marie@gmail.com  / marie123")
-print("👤 Employé 3: paul@gmail.com   / paul123")
+
