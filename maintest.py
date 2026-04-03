@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 #c'est qu'un doissier test ne pas l'effacer
 # Ajoute les composant:
 
@@ -21,3 +22,5 @@ import calendar
 
 # 6. Gestion des erreurs d'affichage
 
+=======
+>>>>>>> Stashed changes
