@@ -60,7 +60,7 @@ class EmployeeDashboard:
         hdr = tk.Frame(self.root, bg=ACCENT, height=54)
         hdr.pack(fill="x")
         hdr.pack_propagate(False)
-        _label(hdr, "✦  Gestion des Congés  ·  Espace Employé", 13, True, FG, ACCENT).pack(side="left", padx=22, pady=14)
+        _label(hdr, "✦  Gestion des Congés  ·  Espace Employee", 13, True, FG, ACCENT).pack(side="left", padx=22, pady=14)
         _label(hdr, f"👤  {self.user['full_name']}", 10, False, "#c7d2fe", ACCENT).pack(side="right", padx=22)
 
         style = ttk.Style()

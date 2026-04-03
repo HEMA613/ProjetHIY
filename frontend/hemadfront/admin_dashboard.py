@@ -33,7 +33,7 @@ def _label(parent, text, size=10, bold=False, fg=FG, bg=None, anchor="w"):
                     fg=fg, bg=bg, anchor=anchor)
 
 
-class AdminDashboard:
+class ManagerDashboard:
     def __init__(self, root, user):
         self.root    = root
         self.user    = user
@@ -41,7 +41,7 @@ class AdminDashboard:
         self.cal_year  = date.today().year
         self.cal_month = date.today().month
 
-        self.root.title(f"Administration — {user['full_name']}")
+        self.root.title(f"Management — {user['full_name']}")
         self.root.geometry("980x680")
         self.root.configure(bg=BG)
         self.root.resizable(True, True)
@@ -60,7 +60,7 @@ class AdminDashboard:
         hdr = tk.Frame(self.root, bg=ACCENT, height=54)
         hdr.pack(fill="x")
         hdr.pack_propagate(False)
-        _label(hdr, "✦  Gestion des Congés  ·  Administration", 13, True, FG, ACCENT).pack(side="left", padx=22, pady=14)
+        _label(hdr, "✦  Gestion des Congés  ·  Management", 13, True, FG, ACCENT).pack(side="left", padx=22, pady=14)
         _label(hdr, f"👤  {self.user['full_name']}", 10, False, "#c7d2fe", ACCENT).pack(side="right", padx=22)
 
         # Style notebook
@@ -78,7 +78,7 @@ class AdminDashboard:
 
         self.tab_req  = tk.Frame(nb, bg=BG); nb.add(self.tab_req,  text="  📋  Demandes  ")
         self.tab_cal  = tk.Frame(nb, bg=BG); nb.add(self.tab_cal,  text="  📅  Calendrier  ")
-        self.tab_emp  = tk.Frame(nb, bg=BG); nb.add(self.tab_emp,  text="  👥  Employés  ")
+        self.tab_emp  = tk.Frame(nb, bg=BG); nb.add(self.tab_emp,  text="  👥  Employees  ")
 
         self._build_requests()
         self._build_calendar()
@@ -126,7 +126,7 @@ class AdminDashboard:
                         font=("Helvetica", 10, "bold"), relief="flat")
         style.map("Dark.Treeview", background=[("selected", ACCENT)])
 
-        cols = ("Employé", "Début", "Fin", "Durée", "Motif", "Soumis le", "Statut")
+        cols = ("Employee", "Début", "Fin", "Durée", "Motif", "Soumis le", "Statut")
         frm  = tk.Frame(self.tab_req, bg=BG)
         frm.pack(fill="both", expand=True, padx=20, pady=4)
 
@@ -286,7 +286,7 @@ class AdminDashboard:
         if self.cal_month > 12: self.cal_month = 1; self.cal_year += 1
         self._render_calendar()
 
-    # ── TAB 3 : Employés ─────────────────────────────────────
+    # ── TAB 3 : Employees ─────────────────────────────────────
     def _build_employees(self):
         self.emp_scroll_frame = tk.Frame(self.tab_emp, bg=BG)
         self.emp_scroll_frame.pack(fill="both", expand=True, padx=24, pady=16)
@@ -296,7 +296,7 @@ class AdminDashboard:
         for w in self.emp_scroll_frame.winfo_children():
             w.destroy()
 
-        _label(self.emp_scroll_frame, "Vue d'ensemble des employés",
+        _label(self.emp_scroll_frame, "Vue d'ensemble des employees",
                14, True, FG, BG).pack(anchor="w", pady=(0, 12))
 
         users = [u for u in self.service.load_users() if u["role"] == "employee"]

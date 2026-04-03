@@ -1,13 +1,13 @@
 import json
 import os
 
-FICHIER_ADMINS = "data/admins.json"
+FICHIER_manager = "data/manager.json"
 FICHIER_DEMANDES = "data/demandes.json"
 
 
-class Admin:
+class Manager:
     """
-    Classe backend représentant un administrateur.
+    Classe backend représentant un manager.
     Peut approuver ou refuser les demandes de congé.
     """
 
@@ -16,22 +16,22 @@ class Admin:
         self.name = name
         self.email = email
         self.password = password
-        self.role = "admin"
+        self.role = "manager"
 
     # ------------------------------------------------------------------ #
     #  Authentification                                                    #
     # ------------------------------------------------------------------ #
 
     @staticmethod
-    def login(email: str, password: str) -> "Admin | None":
+    def login(email: str, password: str) -> "Manager | None":
         """
         Vérifie email + mot de passe.
-        Retourne l'objet Admin si correct, sinon None.
+        Retourne l'objet Manager si correct, sinon None.
         """
-        admins = Admin.charger_tous()
-        for admin in admins:
-            if admin.email == email and admin.password == password:
-                return admin
+        managers = Manager.charger_tous()
+        for manager in managers:
+            if manager.email == email and manager.password == password:
+                return manager
         return None
 
     # ------------------------------------------------------------------ #
@@ -48,7 +48,7 @@ class Admin:
         }
 
     @classmethod
-    def from_dict(cls, data: dict) -> "Admin":
+    def from_dict(cls, data: dict) -> "Manager":
         return cls(
             id=data["id"],
             name=data["name"],
@@ -61,27 +61,27 @@ class Admin:
     # ------------------------------------------------------------------ #
 
     @staticmethod
-    def charger_tous() -> list["Admin"]:
-        if not os.path.exists(FICHIER_ADMINS):
+    def charger_tous() -> list["Manager"]:
+        if not os.path.exists(FICHIER_manager):
             return []
-        with open(FICHIER_ADMINS, "r", encoding="utf-8") as f:
-            return [Admin.from_dict(d) for d in json.load(f)]
+        with open(FICHIER_manager, "r", encoding="utf-8") as f:
+            return [Manager.from_dict(d) for d in json.load(f)]
 
     @staticmethod
-    def sauvegarder_tous(admins: list["Admin"]) -> None:
-        os.makedirs(os.path.dirname(FICHIER_ADMINS), exist_ok=True)
-        with open(FICHIER_ADMINS, "w", encoding="utf-8") as f:
-            json.dump([a.to_dict() for a in admins], f, indent=4, ensure_ascii=False)
+    def sauvegarder_tous(managers: list["Manager"]) -> None:
+        os.makedirs(os.path.dirname(FICHIER_manager), exist_ok=True)
+        with open(FICHIER_manager, "w", encoding="utf-8") as f:
+            json.dump([m.to_dict() for m in managers], f, indent=4, ensure_ascii=False)
 
     def sauvegarder(self) -> None:
-        admins = Admin.charger_tous()
-        for i, a in enumerate(admins):
-            if a.id == self.id:
-                admins[i] = self
-                Admin.sauvegarder_tous(admins)
+        managers = Manager.charger_tous()
+        for i, m in enumerate(managers):
+            if m.id == self.id:
+                managers[i] = self
+                Manager.sauvegarder_tous(managers)
                 return
-        admins.append(self)
-        Admin.sauvegarder_tous(admins)
+        managers.append(self)
+        Manager.sauvegarder_tous(managers)
 
     # ------------------------------------------------------------------ #
     #  Gestion des demandes                                                #
@@ -111,7 +111,7 @@ class Admin:
             if d["id"] == demande_id and d["status"] == "PENDING":
                 d["status"] = "APPROVED"
                 self.sauvegarder_demandes(demandes)
-                print(f"✅ Demande {demande_id} approuvée par {self.name}.")
+                print(f" Demande {demande_id} approuvée par {self.name}.")
                 return True
         print(f"❌ Demande {demande_id} introuvable ou déjà traitée.")
         return False
@@ -145,4 +145,4 @@ class Admin:
     # ------------------------------------------------------------------ #
 
     def __repr__(self) -> str:
-        return f"Admin(id={self.id}, name='{self.name}', email='{self.email}')"
+        return f"Manager(id={self.id}, name='{self.name}', email='{self.email}')"

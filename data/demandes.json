@@ -1,0 +1,33 @@
+[
+    {
+        "id": 1,
+        "employee_id": 1,
+        "employee_name": "Jean Dupont",
+        "start_date": "2025-07-01",
+        "end_date": "2025-07-05",
+        "days": 5,
+        "reason": "Vacances",
+        "status": "APPROVED"
+    },
+    {
+        "id": 2,
+        "employee_id": 1,
+        "employee_name": "Jean Dupont",
+        "start_date": "2025-08-10",
+        "end_date": "2025-08-12",
+        "days": 3,
+        "reason": "Famille",
+        "status": "REJECTED",
+        "motif_refus": "Période chargée"
+    },
+    {
+        "id": 3,
+        "employee_id": 1,
+        "employee_name": "Jean Dupont",
+        "start_date": "2025-10-01",
+        "end_date": "2025-10-03",
+        "days": 3,
+        "reason": "A annuler",
+        "status": "CANCELLED"
+    }
+]

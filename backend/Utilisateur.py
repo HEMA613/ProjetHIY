@@ -6,7 +6,7 @@ FICHIER_EMPLOYES = "data/employes.json"
 FICHIER_DEMANDES = "data/demandes.json"
 
 
-class Utilisateur:
+class Employee:
     """
     Classe backend représentant un employé connecté.
     Peut soumettre et consulter ses propres demandes de congé.
@@ -25,12 +25,12 @@ class Utilisateur:
     # ------------------------------------------------------------------ #
 
     @staticmethod
-    def login(email: str, password: str) -> "Utilisateur | None":
+    def login(email: str, password: str) -> "Employee | None":
         """
         Vérifie email + mot de passe.
         Retourne l'objet Utilisateur si correct, sinon None.
         """
-        utilisateurs = Utilisateur.charger_tous()
+        utilisateurs = Employee.charger_tous()
         for u in utilisateurs:
             if u.email == email and u.password == password:
                 return u
@@ -51,7 +51,7 @@ class Utilisateur:
         }
 
     @classmethod
-    def from_dict(cls, data: dict) -> "Utilisateur":
+    def from_dict(cls, data: dict) -> "Employee":
         return cls(
             id=data["id"],
             name=data["name"],
@@ -65,34 +65,34 @@ class Utilisateur:
     # ------------------------------------------------------------------ #
 
     @staticmethod
-    def charger_tous() -> list["Utilisateur"]:
+    def charger_tous() -> list["Employee"]:
         if not os.path.exists(FICHIER_EMPLOYES):
             return []
         with open(FICHIER_EMPLOYES, "r", encoding="utf-8") as f:
             données = json.load(f)
         # On filtre uniquement les employés (pas les admins)
-        return [Utilisateur.from_dict(d) for d in données if d.get("role") == "employee"]
+        return [Employee.from_dict(d) for d in données if d.get("role") == "employee"]
 
     @staticmethod
-    def sauvegarder_tous(utilisateurs: list["Utilisateur"]) -> None:
+    def sauvegarder_tous(employees: list["Employee"]) -> None:
         os.makedirs(os.path.dirname(FICHIER_EMPLOYES), exist_ok=True)
         with open(FICHIER_EMPLOYES, "w", encoding="utf-8") as f:
-            json.dump([u.to_dict() for u in utilisateurs], f, indent=4, ensure_ascii=False)
+            json.dump([u.to_dict() for u in employees], f, indent=4, ensure_ascii=False)
 
     def sauvegarder(self) -> None:
-        utilisateurs = Utilisateur.charger_tous()
-        for i, u in enumerate(utilisateurs):
+        employees = Employee.charger_tous()
+        for i, u in enumerate(employees):
             if u.id == self.id:
-                utilisateurs[i] = self
-                Utilisateur.sauvegarder_tous(utilisateurs)
+                employees[i] = self
+                Employee.sauvegarder_tous(employees)
                 return
-        utilisateurs.append(self)
-        Utilisateur.sauvegarder_tous(utilisateurs)
+        employees.append(self)
+        Employee.sauvegarder_tous(employees)
 
     @staticmethod
-    def trouver_par_id(id: int) -> "Utilisateur | None":
+    def trouver_par_id(id: int) -> "Employee | None":
         """Recherche un utilisateur par son ID."""
-        for u in Utilisateur.charger_tous():
+        for u in Employee.charger_tous():
             if u.id == id:
                 return u
         return None
@@ -181,5 +181,5 @@ class Utilisateur:
     # ------------------------------------------------------------------ #
 
     def __repr__(self) -> str:
-        return (f"Utilisateur(id={self.id}, name='{self.name}', "
+        return (f"Employee(id={self.id}, name='{self.name}', "
                 f"email='{self.email}', solde={self.vacation_balance}j)")

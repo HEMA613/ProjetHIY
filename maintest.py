@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import messagebox
 from manager_dashboard import ManagerDashboard
 from employee_dashboard import EmployeeDashboard
-
+from backend import init_data
 
 class LoginForm(tk.Tk):
     def __init__(self):
@@ -74,7 +74,7 @@ class LoginForm(tk.Tk):
         elif username == "sarah@company.com" and password:
             messagebox.showinfo("Success", "Welcome Employee!")
             self.destroy()
-            EmployeeDashboard()  # Ouvre le dashboard employé
+            EmployeeDashboard()  # Ouvre le dashboard employee
 
         else:
             messagebox.showerror("Error", "Invalid credentials")

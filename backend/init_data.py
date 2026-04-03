@@ -1,37 +1,38 @@
-from admin import Admin
-from utilisateur import Utilisateur
+from .manager import Manager
+from .Utilisateur import Employee
 
 print("🚀 Initialisation des données...")
 
 # ------------------------------------------------------------------ #
-#  Création des admins                                                 #
+#  Création des managers                                                 #
 # ------------------------------------------------------------------ #
 
-admins = [
-    Admin(id=1, name="Administrateur", email="admin@gmail.com", password="admin123"),
+managers = [
+    Manager(id=1, name="Manager", email="manager@gmail.com", password="manager123"),
 ]
 
-for admin in admins:
-    admin.sauvegarder()
-    print(f"✅ Admin créé : {admin.name} | email: {admin.email} | password: {admin.password}")
+for manager in managers:
+    manager.sauvegarder()
+    print(f"✅ Manager créé : {manager.name} | email: {manager.email} | password: {manager.password}")
 
 # ------------------------------------------------------------------ #
 #  Création des employés                                               #
 # ------------------------------------------------------------------ #
 
 employes = [
-    Utilisateur(id=1, name="Jean Dupont",   email="jean@gmail.com",   password="jean123",   vacation_balance=25),
-    Utilisateur(id=2, name="Marie Martin",  email="marie@gmail.com",  password="marie123",  vacation_balance=20),
-    Utilisateur(id=3, name="Paul Bernard",  email="paul@gmail.com",   password="paul123",   vacation_balance=15),
+    Employee(id=1, name="Jean Dupont",   email="jean@gmail.com",   password="jean123",   vacation_balance=25),
+    Employee(id=2, name="Marie Martin",  email="marie@gmail.com",  password="marie123",  vacation_balance=20),
+    Employee(id=3, name="Paul Bernard",  email="paul@gmail.com",   password="paul123",   vacation_balance=15),
 ]
 
 for emp in employes:
     emp.sauvegarder()
-    print(f"✅ Employé créé : {emp.name} | email: {emp.email} | password: {emp.password} | solde: {emp.vacation_balance}j")
+    print(f"✅ Employee créé : {emp.name} | email: {emp.email} | password: {emp.password} | solde: {emp.vacation_balance}j")
 
 print("\n🎉 Initialisation terminée !")
-print("📁 Fichiers générés : data/admins.json | data/employes.json")
+print("📁 Fichiers générés : data/manager.json | data/employes.json")
 print("\n--- IDENTIFIANTS ---")
-print("👑 Admin    : admin@gmail.com  / admin123")
-print("👤 Employé 1: jean@gmail.com   / jean123")
-print("👤 Employé 2: marie@gmail.com  / marie123")
+print("👑 Manager  : manager@gmail.com  / manager123")
+print("👤 Employee 1: jean@gmail.com   / jean123")
+print("👤 Employee 2: marie@gmail.com  / marie123")
+print("👤 Employee 3: paul@gmail.com   / paul123")

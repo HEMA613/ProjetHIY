@@ -25,7 +25,7 @@ class LoginForm(tk.Tk):
         password = self.password_entry.get()
 
         # Simulate authentication (replace with real logic)
-        if username == "admin" and password == "password":
+        if username == "manager" and password == "password":
             messagebox.showinfo("Success", "Login successful!")
             self.destroy()
             # TODO: call main app
@@ -58,11 +58,11 @@ class VacationManager:
         menubar = tk.Menu(self.root)
         self.root.config(menu=menubar)
 
-        # Menu Employés
+        # Menu Employees
         employees_menu = tk.Menu(menubar, tearoff=0)
-        menubar.add_cascade(label="Employés", menu=employees_menu)
-        employees_menu.add_command(label="Voir Employés", command=self.show_employees)
-        employees_menu.add_command(label="Ajouter Employé", command=self.add_employee)
+        menubar.add_cascade(label="Employees", menu=employees_menu)
+        employees_menu.add_command(label="Voir Employees", command=self.show_employees)
+        employees_menu.add_command(label="Ajouter Employee", command=self.add_employee)
 
         # Menu Congés
         vacations_menu = tk.Menu(menubar, tearoff=0)
@@ -84,9 +84,9 @@ class VacationManager:
         stats_frame = ttk.Frame(self.main_frame)
         stats_frame.pack(pady=10)
 
-        # Nombre d'employés
+        # Nombre d'employees
         employees_count = len(self.employees)
-        ttk.Label(stats_frame, text=f"Nombre d'Employés: {employees_count}", font=("Arial", 12)).grid(row=0, column=0, padx=20)
+        ttk.Label(stats_frame, text=f"Nombre d'Employees: {employees_count}", font=("Arial", 12)).grid(row=0, column=0, padx=20)
 
         # Demandes en attente
         pending_count = len([v for v in self.vacations if v['status'] == 'pending'])
@@ -100,7 +100,7 @@ class VacationManager:
         if os.path.exists(self.employees_file):
             with open(self.employees_file, 'r') as f:
                 return json.load(f)
-        # Employés par défaut
+        # Employees par défaut
         return [
             {'id': 1, 'name': 'SUTHAHER Hemadhuran'},
             {'id': 2, 'name': 'ALI YOUSSOUF'},
@@ -124,10 +124,10 @@ class VacationManager:
     def show_employees(self):
         # Nouvelle fenêtre
         employees_window = tk.Toplevel(self.root)
-        employees_window.title("Gestion des Employés")
+        employees_window.title("Gestion des Employees")
         employees_window.geometry("600x400")
 
-        # Liste des employés
+        # Liste des employees
         tree = ttk.Treeview(employees_window, columns=('ID', 'Nom'), show='headings')
         tree.heading('ID', text='ID')
         tree.heading('Nom', text='Nom')
@@ -144,12 +144,12 @@ class VacationManager:
         ttk.Button(btn_frame, text="Supprimer", command=lambda: self.delete_employee(tree)).pack(side=tk.LEFT, padx=5)
 
     def add_employee(self):
-        name = simpledialog.askstring("Ajouter Employé", "Nom de l'employé:")
+        name = simpledialog.askstring("Ajouter Employee", "Nom de l'employee:")
         if name:
             new_id = max([e['id'] for e in self.employees]) + 1 if self.employees else 1
             self.employees.append({'id': new_id, 'name': name})
             self.save_employees()
-            messagebox.showinfo("Succès", "Employé ajouté avec succès!")
+            messagebox.showinfo("Succès", "Employee ajouté avec succès!")
             self.refresh_dashboard()
 
     def delete_employee(self, tree):
@@ -160,7 +160,7 @@ class VacationManager:
             self.employees = [e for e in self.employees if e['id'] != emp_id]
             self.save_employees()
             tree.delete(selected[0])
-            messagebox.showinfo("Succès", "Employé supprimé!")
+            messagebox.showinfo("Succès", "Employee supprimé!")
             self.refresh_dashboard()
 
     def request_vacation(self):
@@ -170,7 +170,7 @@ class VacationManager:
         req_window.geometry("400x300")
 
         # Formulaire
-        ttk.Label(req_window, text="Employé:").pack(pady=5)
+        ttk.Label(req_window, text="Employee:").pack(pady=5)
         emp_var = tk.StringVar()
         emp_combo = ttk.Combobox(req_window, textvariable=emp_var, values=[e['name'] for e in self.employees])
         emp_combo.pack(pady=5)
@@ -219,8 +219,8 @@ class VacationManager:
         vac_window.geometry("800x400")
 
         # Liste des demandes
-        tree = ttk.Treeview(vac_window, columns=('Employé', 'Début', 'Fin', 'Raison', 'Statut'), show='headings')
-        tree.heading('Employé', text='Employé')
+        tree = ttk.Treeview(vac_window, columns=('Employee', 'Début', 'Fin', 'Raison', 'Statut'), show='headings')
+        tree.heading('Employee', text='Employee')
         tree.heading('Début', text='Date Début')
         tree.heading('Fin', text='Date Fin')
         tree.heading('Raison', text='Raison')
@@ -334,16 +334,15 @@ if __name__ == "__main__":
     root.mainloop()
 
     from datetime import date
-from models.employee import Employee
-from services.request_service import RequestService
+from backend.employee import Employee
+from backend.gestionnaire import Gestionnaire
 
-employee = Employee(1, "Sarah", "sarah@test.com", "EMPLOYEE", 10)
+employee = Employee(1, "Sarah", "sarah@test.com", "employee", 10)
 
-service = RequestService()
+service = Gestionnaire()
 
-request = service.submit_request(
+request = service.soumettre_demande(
     employee,
-    1,
     date(2026, 4, 10),
     date(2026, 4, 12),
     "Family vacation"
