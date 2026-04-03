@@ -16,8 +16,7 @@ from manager_dashboard import ManagerDashboard
 from employee_dashboard import EmployeeDashboard
 
 # Import du module backend pour initialiser les données au démarrage
-from backend import init_data
-
+from backend import init_data 
 
 def load_backend_users():
     """
@@ -90,15 +89,7 @@ class LoginForm(tk.Tk):
         # --- Chargement des utilisateurs depuis le backend ---
         self.users = load_backend_users()
 
-        # Si aucun utilisateur trouvé dans les fichiers JSON,
-        # on affiche des comptes de démo codés en dur
-        if not self.users:
-            self.demo("john@company.com",  "John Manager",    "manager",  card)
-            self.demo("sarah@company.com", "Sarah Employee",  "employee", card)
-        else:
-            # Sinon on affiche tous les vrais comptes comme raccourcis cliquables
-            for u in self.users:
-                self.demo(u["username"], u["full_name"], u["role"], card)
+
 
     def demo(self, email, full_name, role, parent):
         """
@@ -140,7 +131,7 @@ class LoginForm(tk.Tk):
         if not user:
             messagebox.showerror("Error", "Invalid credentials")
             return
-
+ 
         messagebox.showinfo("Success", f"Welcome {user['full_name']}!")
         self.destroy()  # ferme la fenêtre de login
 
@@ -157,4 +148,3 @@ if __name__ == "__main__":
     # Point d'entrée : on lance l'app uniquement si on exécute ce fichier directement
     app = LoginForm()
     app.mainloop()
-    
