@@ -1,0 +1,5 @@
+[
+    {"username": "hemad", "password": "azerty", "role": "admin",     "full_name": "Hemad (Admin)",   "total_days": 25},
+    {"username": "ilam",  "password": "azerty", "role": "employee",  "full_name": "Ilam",            "total_days": 25},
+    {"username": "ali",   "password": "azerty", "role": "employee",  "full_name": "Ali",             "total_days": 25}
+]
