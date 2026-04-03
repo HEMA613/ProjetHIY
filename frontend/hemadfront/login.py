@@ -92,11 +92,24 @@ class LoginForm(tk.Tk):
         tk.Frame(parent, bg=CARD, height=h).pack()
 
     def _load_users(self):
-        path = os.path.join(DATA_DIR, "users.json")
-        if os.path.exists(path):
-            with open(path, encoding="utf-8") as f:
-                return json.load(f)
-        return []
+        # Charger les données du backend, pas du frontend static.
+        root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
+        backend_data = os.path.join(root, "backend", "data")
+
+        users = []
+        for path in [os.path.join(backend_data, "manager.json"), os.path.join(backend_data, "employes.json")]:
+            if os.path.exists(path):
+                with open(path, encoding="utf-8") as f:
+                    for u in json.load(f):
+                        role = "manager" if "manager" in os.path.basename(path) else "employee"
+                        users.append({
+                            "username": u.get("email"),
+                            "password": u.get("password"),
+                            "full_name": u.get("name"),
+                            "role": role,
+                            "total_days": u.get("vacation_balance", 25) if role == "employee" else 9999,
+                        })
+        return users
 
     def _login(self):
         username = self.username_entry.get().strip()
@@ -116,9 +129,9 @@ class LoginForm(tk.Tk):
 
     def _open(self, user):
         root = tk.Tk()
-        if user["role"] == "admin":
-            from ui.admin_dashboard import AdminDashboard
-            AdminDashboard(root, user)
+        if user["role"] == "manager":
+            from ui.admin_dashboard import ManagerDashboard
+            ManagerDashboard(root, user)
         else:
             from ui.employee_dashboard import EmployeeDashboard
             EmployeeDashboard(root, user)

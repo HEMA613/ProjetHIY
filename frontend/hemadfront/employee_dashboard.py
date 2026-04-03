@@ -4,8 +4,9 @@ import calendar, sys, os
 from datetime import date
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.insert(0, BASE_DIR)
-from services.vacation_service import VacationService
+services_dir = os.path.join(BASE_DIR, "hemadfront", "services")
+sys.path.insert(0, services_dir)
+from vacation_service import VacationService
 
 # ── palette ────────────────────────────────────────────────────
 BG      = "#0f172a"

@@ -1,5 +1,9 @@
-from .manager import Manager
-from .Utilisateur import Employee
+try:
+    from .manager import Manager
+    from .Utilisateur import Employee
+except ImportError:
+    from manager import Manager
+    from Utilisateur import Employee
 
 class Gestionnaire:
     """
