@@ -64,11 +64,18 @@ class LoginForm(tk.Tk):
         username = self.username_entry.get()
         password = self.password_entry.get()
 
-        # Fake authentication
-        if username in ["john@company.com", "sarah@company.com", "admin"] and password:
-            messagebox.showinfo("Success", f"Welcome {username}!")
+        # --- Manager login ---
+        if username == "john@company.com" and password:
+            messagebox.showinfo("Success", "Welcome Manager!")
             self.destroy()
-            # TODO: launch main app
+            ManagerDashboard()   # Ouvre le dashboard manager
+
+        # --- Employee login ---
+        elif username == "sarah@company.com" and password:
+            messagebox.showinfo("Success", "Welcome Employee!")
+            self.destroy()
+            EmployeeDashboard()  # Ouvre le dashboard employé
+
         else:
             messagebox.showerror("Error", "Invalid credentials")
 
