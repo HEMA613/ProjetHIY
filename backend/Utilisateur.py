@@ -89,6 +89,14 @@ class Utilisateur:
         utilisateurs.append(self)
         Utilisateur.sauvegarder_tous(utilisateurs)
 
+    @staticmethod
+    def trouver_par_id(id: int) -> "Utilisateur | None":
+        """Recherche un utilisateur par son ID."""
+        for u in Utilisateur.charger_tous():
+            if u.id == id:
+                return u
+        return None
+
     # ------------------------------------------------------------------ #
     #  Demandes de congé                                                   #
     # ------------------------------------------------------------------ #
@@ -146,6 +154,12 @@ class Utilisateur:
     def mes_demandes(self) -> list[dict]:
         """Retourne uniquement les demandes de cet utilisateur."""
         return [d for d in self._charger_demandes() if d["employee_id"] == self.id]
+
+    def deduire_solde(self, jours: int) -> None:
+        """Déduit des jours du solde après approbation."""
+        if jours > self.vacation_balance:
+            raise ValueError(f"Solde insuffisant : {self.vacation_balance}j disponibles, {jours}j demandés.")
+        self.vacation_balance -= jours
 
     def annuler_demande(self, demande_id: int) -> bool:
         """
