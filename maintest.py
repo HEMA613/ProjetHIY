@@ -1,8 +1,35 @@
+import os, sys, json
 import tkinter as tk
 from tkinter import messagebox
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, os.path.join(BASE_DIR, "front-end"))
+sys.path.insert(0, os.path.join(BASE_DIR, "frontend", "hemadfront"))
+
 from manager_dashboard import ManagerDashboard
 from employee_dashboard import EmployeeDashboard
 from backend import init_data
+
+
+def load_backend_users():
+    users = []
+    for path, role in [
+        (os.path.join(BASE_DIR, "backend", "data", "manager.json"), "manager"),
+        (os.path.join(BASE_DIR, "backend", "data", "employes.json"), "employee"),
+    ]:
+        if not os.path.exists(path):
+            continue
+        with open(path, "r", encoding="utf-8") as f:
+            records = json.load(f)
+        for r in records:
+            users.append({
+                "username": r.get("email"),
+                "password": r.get("password", ""),
+                "full_name": r.get("name"),
+                "role": role,
+                "total_days": r.get("vacation_balance", 25) if role == "employee" else 9999,
+            })
+    return users
 
 class LoginForm(tk.Tk):
     def __init__(self):
@@ -38,18 +65,21 @@ class LoginForm(tk.Tk):
                   bg="#1a73e8", fg="white", activebackground="#1666c4",
                   relief="flat", command=self.login).pack(pady=15, ipadx=10, ipady=5)
 
-        # --- Demo accounts ---
-        tk.Label(card, text="Demo Accounts (any password works):",
-                 font=("Segoe UI", 9, "bold"), bg="white").pack(pady=(10, 5))
+  
 
-        self.demo("john@company.com", "Manager", card)
-        self.demo("sarah@company.com", "Employee", card)
+        self.users = load_backend_users()
+        if not self.users:
+            self.demo("john@company.com", "John Manager", "manager", card)
+            self.demo("sarah@company.com", "Sarah Employee", "employee", card)
+        else:
+            for u in self.users:
+                self.demo(u["username"], u["full_name"], u["role"], card)
 
-    def demo(self, email, role, parent):
+    def demo(self, email, full_name, role, parent):
         frame = tk.Frame(parent, bg="white")
         frame.pack(pady=2)
 
-        label = tk.Label(frame, text=f"{email} — {role}", 
+        label = tk.Label(frame, text=f"{email} — {full_name} ({role})", 
                          font=("Segoe UI", 9), fg="#1a73e8", bg="white", cursor="hand2")
         label.pack()
         label.bind("<Button-1>", lambda e: self.autofill(email))
@@ -64,20 +94,20 @@ class LoginForm(tk.Tk):
         username = self.username_entry.get()
         password = self.password_entry.get()
 
-        # --- Manager login ---
-        if username == "john@company.com" and password:
-            messagebox.showinfo("Success", "Welcome Manager!")
-            self.destroy()
-            ManagerDashboard()   # Ouvre le dashboard manager
-
-        # --- Employee login ---
-        elif username == "sarah@company.com" and password:
-            messagebox.showinfo("Success", "Welcome Employee!")
-            self.destroy()
-            EmployeeDashboard()  # Ouvre le dashboard employee
-
-        else:
+        user = next((u for u in self.users if u["username"] == username and u["password"] == password), None)
+        if not user:
             messagebox.showerror("Error", "Invalid credentials")
+            return
+
+        messagebox.showinfo("Success", f"Welcome {user['full_name']}!")
+        self.destroy()
+
+        root = tk.Tk()
+        if user["role"] == "manager":
+            ManagerDashboard(root, user)
+        else:
+            EmployeeDashboard(root, user)
+        root.mainloop()
 
 if __name__ == "__main__":
     app = LoginForm()

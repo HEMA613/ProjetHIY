@@ -56,6 +56,7 @@ class VacationService:
                 if v.get("employee_email") == username or v.get("employee_name") == user.get("full_name")]
 
     @staticmethod
+    @staticmethod
     def _day_count(start_date, end_date):
         try:
             s = date.fromisoformat(start_date)
@@ -63,6 +64,10 @@ class VacationService:
             return (e - s).days + 1
         except Exception:
             return 0
+
+    @staticmethod
+    def count_days(start_date, end_date):
+        return VacationService._day_count(start_date, end_date)
 
     def get_used_days(self, username):
         vacs = self.get_user_vacations(username)

@@ -4,8 +4,8 @@ import calendar, sys, os
 from datetime import date
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-# admin_dashboard is in frontend/hemadfront, service in same folder under services
-services_dir = os.path.join(BASE_DIR, "hemadfront", "services")
+# ManagerDashboard is in front-end; service is in frontend/hemadfront/services
+services_dir = os.path.join(BASE_DIR, "frontend", "hemadfront", "services")
 sys.path.insert(0, services_dir)
 from vacation_service import VacationService
 
@@ -169,7 +169,8 @@ class ManagerDashboard:
         for v in reversed(vacs):
             if flt != "all" and v["status"] != flt:
                 continue
-            name   = users.get(v["username"], v["username"])
+            requester = v.get("employee_email") or v.get("username") or v.get("employee_name")
+            name   = users.get(requester, requester)
             days   = VacationService.count_days(v["start_date"], v["end_date"])
             _, _, slabel = STATUS_CFG.get(v["status"], ("", "", v["status"]))
             self.tree.insert("", "end", iid=str(v["id"]),

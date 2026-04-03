@@ -70,7 +70,7 @@ class Employee:
             return []
         with open(FICHIER_EMPLOYES, "r", encoding="utf-8") as f:
             données = json.load(f)
-        # On filtre uniquement les employés (pas les admins)
+        # On filtre uniquement les employés (pas les managers)
         return [Employee.from_dict(d) for d in données if d.get("role") == "employee"]
 
     @staticmethod

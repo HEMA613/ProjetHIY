@@ -57,8 +57,8 @@ class Employee:
         """Restitue des jours au solde (ex: demande annulée)."""
         self.vacation_balance += jours
 
-    def est_admin(self) -> bool:
-        """Retourne True si l'employee est un administrateur."""
+    def est_manager(self) -> bool:
+        """Retourne True si l'employee est un manager."""
         return self.role == "manager"
 
     # ------------------------------------------------------------------ #

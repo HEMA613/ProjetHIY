@@ -25,9 +25,9 @@ print(f"{OK} Fichiers JSON réinitialisés{RST}")
 
 # 1. CRÉATION
 titre("1. Création des comptes")
-admin = Manager(id=1, name="Administrateur", email="admin@gmail.com", password="admin123")
-admin.sauvegarder()
-print(f"{OK} Manager créé : {admin}{RST}")
+manager = Manager(id=1, name="Administrateur", email="manager@gmail.com", password="manager123")
+manager.sauvegarder()
+print(f"{OK} Manager créé : {manager}{RST}")
 
 jean  = Employee(id=1, name="Jean Dupont",  email="jean@gmail.com",  password="jean123",  vacation_balance=25)
 marie = Employee(id=2, name="Marie Martin", email="marie@gmail.com", password="marie123", vacation_balance=10)
@@ -38,9 +38,9 @@ print(f"{OK} Marie créée: {marie}{RST}")
 
 # 2. LOGIN
 titre("2. Test Login")
-session_admin = Gestionnaire.login("admin@gmail.com", "admin123")
-assert session_admin and session_admin["role"] == "manager"
-print(f"{OK} Login manager OK → rôle: {session_admin['role']}{RST}")
+session_manager = Gestionnaire.login("manager@gmail.com", "manager123")
+assert session_manager and session_manager["role"] == "manager"
+print(f"{OK} Login manager OK → rôle: {session_manager['role']}{RST}")
 
 session_jean = Gestionnaire.login("jean@gmail.com", "jean123")
 assert session_jean and session_jean["role"] == "employee"
@@ -74,8 +74,8 @@ print(f"{OK} Solde insuffisant rejeté{RST}")
 
 # 4. MANAGER : demandes en attente
 titre("4. Manager — demandes en attente")
-admin_user = session_admin["user"]
-en_attente = admin_user.voir_demandes_en_attente()
+manager_user = session_manager["user"]
+en_attente = manager_user.voir_demandes_en_attente()
 assert len(en_attente) == 2
 print(f"{OK} {len(en_attente)} demande(s) en attente{RST}")
 for d in en_attente:
@@ -83,7 +83,7 @@ for d in en_attente:
 
 # 5. APPROUVER
 titre("5. Manager — approuver demande ID 1")
-resultat = Gestionnaire.approuver_demande(admin_user, demande_id=1)
+resultat = Gestionnaire.approuver_demande(manager_user, demande_id=1)
 assert resultat is True
 print(f"{OK} Demande 1 approuvée{RST}")
 jean_maj = Employee.trouver_par_id(1)
@@ -92,7 +92,7 @@ print(f"{OK} Solde Jean : {jean_maj.vacation_balance}j restants{RST}")
 
 # 6. REFUSER
 titre("6. Manager — refuser demande ID 2")
-resultat = Gestionnaire.refuser_demande(admin_user, demande_id=2, motif="Période chargée")
+resultat = Gestionnaire.refuser_demande(manager_user, demande_id=2, motif="Période chargée")
 assert resultat is True
 print(f"{OK} Demande 2 refusée{RST}")
 

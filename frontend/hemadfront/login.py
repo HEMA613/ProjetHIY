@@ -130,7 +130,7 @@ class LoginForm(tk.Tk):
     def _open(self, user):
         root = tk.Tk()
         if user["role"] == "manager":
-            from ui.admin_dashboard import ManagerDashboard
+            from ui.manager_dashboard import ManagerDashboard
             ManagerDashboard(root, user)
         else:
             from ui.employee_dashboard import EmployeeDashboard
