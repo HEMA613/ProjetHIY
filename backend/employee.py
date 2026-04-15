@@ -11,11 +11,13 @@ class Employee:
     Gère la logique métier + la persistance JSON.
     """
 
-    def __init__(self, id: int, name: str, email: str, role: str, vacation_balance: int = 25):
+    def __init__(
+        self, id: int, name: str, email: str, role: str, vacation_balance: int = 25
+    ):
         self.id = id
         self.name = name
         self.email = email
-        self.role = role                        # "employee" ou "manager"
+        self.role = role  # "employee" ou "manager"
         self.vacation_balance = vacation_balance  # solde de congés en jours
 
     # ------------------------------------------------------------------ #
@@ -29,7 +31,7 @@ class Employee:
             "name": self.name,
             "email": self.email,
             "role": self.role,
-            "vacation_balance": self.vacation_balance
+            "vacation_balance": self.vacation_balance,
         }
 
     @classmethod
@@ -40,7 +42,7 @@ class Employee:
             name=data["name"],
             email=data["email"],
             role=data["role"],
-            vacation_balance=data.get("vacation_balance", 25)
+            vacation_balance=data.get("vacation_balance", 25),
         )
 
     # ------------------------------------------------------------------ #
@@ -50,7 +52,10 @@ class Employee:
     def deduire_solde(self, jours: int) -> None:
         """Déduit des jours du solde de congés après approbation."""
         if jours > self.vacation_balance:
-            raise ValueError(f"Solde insuffisant : {self.vacation_balance}j disponibles, {jours}j demandés.")
+            raise ValueError(
+                f"Solde insuffisant : {self.vacation_balance}j disponibles, "
+                f"{jours}j demandés."
+            )
         self.vacation_balance -= jours
 
     def restituer_solde(self, jours: int) -> None:
@@ -119,5 +124,7 @@ class Employee:
     # ------------------------------------------------------------------ #
 
     def __repr__(self) -> str:
-        return (f"Employee(id={self.id}, name='{self.name}', "
-                f"role='{self.role}', solde={self.vacation_balance}j)")
+        return (
+            f"Employee(id={self.id}, name='{self.name}', "
+            f"role='{self.role}', solde={self.vacation_balance}j)"
+        )

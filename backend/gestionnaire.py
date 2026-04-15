@@ -1,6 +1,7 @@
 from manager import Manager
 from Utilisateur import Employee
 
+
 class Gestionnaire:
     """
     Classe centrale du backend.
@@ -91,7 +92,9 @@ class Gestionnaire:
     # ------------------------------------------------------------------ #
 
     @staticmethod
-    def soumettre_demande(user: Employee, start_date, end_date, reason: str = "") -> dict | None:
+    def soumettre_demande(
+        user: Employee, start_date, end_date, reason: str = ""
+    ) -> dict | None:
         """
         Soumet une demande de congé pour un employee.
         Retourne la demande créée ou None si erreur.
@@ -135,11 +138,11 @@ class Gestionnaire:
 
         stats = {
             "total_demandes": len(demandes),
-            "en_attente":     sum(1 for d in demandes if d["status"] == "PENDING"),
-            "approuvees":     sum(1 for d in demandes if d["status"] == "APPROVED"),
-            "refusees":       sum(1 for d in demandes if d["status"] == "REJECTED"),
-            "annulees":       sum(1 for d in demandes if d["status"] == "CANCELLED"),
-            "total_employees": len(employees)
+            "en_attente": sum(1 for d in demandes if d["status"] == "PENDING"),
+            "approuvees": sum(1 for d in demandes if d["status"] == "APPROVED"),
+            "refusees": sum(1 for d in demandes if d["status"] == "REJECTED"),
+            "annulees": sum(1 for d in demandes if d["status"] == "CANCELLED"),
+            "total_employees": len(employees),
         }
 
         print(f"📊 Stats : {stats}")

@@ -44,7 +44,7 @@ class Manager:
             "name": self.name,
             "email": self.email,
             "password": self.password,
-            "role": self.role
+            "role": self.role,
         }
 
     @classmethod
@@ -53,7 +53,7 @@ class Manager:
             id=data["id"],
             name=data["name"],
             email=data["email"],
-            password=data["password"]
+            password=data["password"],
         )
 
     # ------------------------------------------------------------------ #

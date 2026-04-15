@@ -1,19 +1,23 @@
-import sys
+import json
 import os
+import pathlib
+import sys
+from datetime import date
+
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from datetime import date
-from manager import Manager
 from Utilisateur import Employee
 from gestionnaire import Gestionnaire
-import json, pathlib
+from manager import Manager
 
-OK  = "\033[92m✅"
+OK = "\033[92m\u2705"
 RST = "\033[0m"
 SEP = "─" * 50
 
+
 def titre(t):
     print(f"\n{SEP}\n🔹 {t}\n{SEP}")
+
 
 # 0. NETTOYAGE
 titre("0. Nettoyage des fichiers JSON")
@@ -25,12 +29,26 @@ print(f"{OK} Fichiers JSON réinitialisés{RST}")
 
 # 1. CRÉATION
 titre("1. Création des comptes")
-manager = Manager(id=1, name="Administrateur", email="manager@gmail.com", password="manager123")
+manager = Manager(
+    id=1, name="Administrateur", email="manager@gmail.com", password="manager123"
+)
 manager.sauvegarder()
 print(f"{OK} Manager créé : {manager}{RST}")
 
-jean  = Employee(id=1, name="Jean Dupont",  email="jean@gmail.com",  password="jean123",  vacation_balance=25)
-marie = Employee(id=2, name="Marie Martin", email="marie@gmail.com", password="marie123", vacation_balance=10)
+jean = Employee(
+    id=1,
+    name="Jean Dupont",
+    email="jean@gmail.com",
+    password="jean123",
+    vacation_balance=25,
+)
+marie = Employee(
+    id=2,
+    name="Marie Martin",
+    email="marie@gmail.com",
+    password="marie123",
+    vacation_balance=10,
+)
 jean.sauvegarder()
 marie.sauvegarder()
 print(f"{OK} Jean créé  : {jean}{RST}")
@@ -54,21 +72,29 @@ print(f"{OK} Login invalide rejeté{RST}")
 titre("3. Soumission de demandes")
 user_jean = session_jean["user"]
 
-d1 = Gestionnaire.soumettre_demande(user_jean, date(2025, 7, 1), date(2025, 7, 5), "Vacances")
+d1 = Gestionnaire.soumettre_demande(
+    user_jean, date(2025, 7, 1), date(2025, 7, 5), "Vacances"
+)
 assert d1 is not None and d1["days"] == 5
 print(f"{OK} Demande 1 : {d1['days']}j du {d1['start_date']} au {d1['end_date']}{RST}")
 
-d2 = Gestionnaire.soumettre_demande(user_jean, date(2025, 8, 10), date(2025, 8, 12), "Famille")
+d2 = Gestionnaire.soumettre_demande(
+    user_jean, date(2025, 8, 10), date(2025, 8, 12), "Famille"
+)
 assert d2 is not None
 print(f"{OK} Demande 2 : {d2['days']}j{RST}")
 
-d_bad = Gestionnaire.soumettre_demande(user_jean, date(2025, 9, 10), date(2025, 9, 5), "Erreur")
+d_bad = Gestionnaire.soumettre_demande(
+    user_jean, date(2025, 9, 10), date(2025, 9, 5), "Erreur"
+)
 assert d_bad is None
 print(f"{OK} Dates invalides rejetées{RST}")
 
 session_marie = Gestionnaire.login("marie@gmail.com", "marie123")
 user_marie = session_marie["user"]
-d_insuf = Gestionnaire.soumettre_demande(user_marie, date(2025, 6, 1), date(2025, 6, 15), "Trop long")
+d_insuf = Gestionnaire.soumettre_demande(
+    user_marie, date(2025, 6, 1), date(2025, 6, 15), "Trop long"
+)
 assert d_insuf is None
 print(f"{OK} Solde insuffisant rejeté{RST}")
 
@@ -92,7 +118,9 @@ print(f"{OK} Solde Jean : {jean_maj.vacation_balance}j restants{RST}")
 
 # 6. REFUSER
 titre("6. Manager — refuser demande ID 2")
-resultat = Gestionnaire.refuser_demande(manager_user, demande_id=2, motif="Période chargée")
+resultat = Gestionnaire.refuser_demande(
+    manager_user, demande_id=2, motif="Période chargée"
+)
 assert resultat is True
 print(f"{OK} Demande 2 refusée{RST}")
 
@@ -114,13 +142,15 @@ print(f"{OK} Stats OK : {stats}{RST}")
 
 # 9. ANNULER
 titre("9. Annuler une demande")
-d3 = Gestionnaire.soumettre_demande(user_jean, date(2025, 10, 1), date(2025, 10, 3), "A annuler")
+d3 = Gestionnaire.soumettre_demande(
+    user_jean, date(2025, 10, 1), date(2025, 10, 3), "A annuler"
+)
 assert d3 is not None
 annulation = Gestionnaire.annuler_demande(user_jean, d3["id"])
 assert annulation is True
 print(f"{OK} Demande annulée{RST}")
 
 # RÉSULTAT
-print(f"\n{'═' * 50}")
-print(f"\033[92m🎉 TOUS LES TESTS PASSÉS ! Backend opérationnel.\033[0m")
-print(f"{'═' * 50}\n")
+print(f"\n{'='*50}")
+print("\033[92m🎉 TOUS LES TESTS PASSÉS ! Backend opérationnel.\033[0m")
+print(f"{'='*50}\n")

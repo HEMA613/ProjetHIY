@@ -17,21 +17,45 @@ managers = [
 
 for manager in managers:
     manager.sauvegarder()
-    print(f"✅ Manager créé : {manager.name} | email: {manager.email} | password: {manager.password}")
+    print(
+        f"✅ Manager créé : {manager.name} | "
+        f"email: {manager.email} | password: {manager.password}"
+    )
 
 # ------------------------------------------------------------------ #
 #  Création des employés                                               #
 # ------------------------------------------------------------------ #
 
 employes = [
-    Employee(id=1, name="Jean Dupont",   email="jean@gmail.com",   password="jean123",   vacation_balance=25),
-    Employee(id=2, name="Marie Martin",  email="marie@gmail.com",  password="marie123",  vacation_balance=20),
-    Employee(id=3, name="Paul Bernard",  email="paul@gmail.com",   password="paul123",   vacation_balance=15),
+    Employee(
+        id=1,
+        name="Jean Dupont",
+        email="jean@gmail.com",
+        password="jean123",
+        vacation_balance=25,
+    ),
+    Employee(
+        id=2,
+        name="Marie Martin",
+        email="marie@gmail.com",
+        password="marie123",
+        vacation_balance=20,
+    ),
+    Employee(
+        id=3,
+        name="Paul Bernard",
+        email="paul@gmail.com",
+        password="paul123",
+        vacation_balance=15,
+    ),
 ]
 
 for emp in employes:
     emp.sauvegarder()
-    print(f"✅ Employee créé : {emp.name} | email: {emp.email} | password: {emp.password} | solde: {emp.vacation_balance}j")
+    print(
+        f"✅ Employee créé : {emp.name} | email: {emp.email} | "
+        f"password: {emp.password} | solde: {emp.vacation_balance}j"
+    )
 
 print("\n🎉 Initialisation terminée !")
 print("📁 Fichiers générés : data/manager.json | data/employes.json")

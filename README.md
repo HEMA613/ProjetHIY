@@ -74,7 +74,7 @@ ProjetHIY/
 
 Ce résumé permet de comprendre la structure globale sans plonger dans le code détaillé.
 
-#Questions possibles:
+## Questions possibles:
 
 1- Affichez un raccourci de l'identifiants email et mot de passe sur le page pour se  connecter rapidement en clic.
 

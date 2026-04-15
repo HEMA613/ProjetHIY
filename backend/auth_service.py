@@ -5,6 +5,7 @@ except ImportError:
     from manager import Manager
     from Utilisateur import Employee
 
+
 def authenticate(email: str, password: str):
     # Vérifier manager
     manager = Manager.login(email, password)

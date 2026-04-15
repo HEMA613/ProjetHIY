@@ -12,7 +12,9 @@ class Employee:
     Peut soumettre et consulter ses propres demandes de congé.
     """
 
-    def __init__(self, id: int, name: str, email: str, password: str, vacation_balance: int = 25):
+    def __init__(
+        self, id: int, name: str, email: str, password: str, vacation_balance: int = 25
+    ):
         self.id = id
         self.name = name
         self.email = email
@@ -47,7 +49,7 @@ class Employee:
             "email": self.email,
             "password": self.password,
             "vacation_balance": self.vacation_balance,
-            "role": self.role
+            "role": self.role,
         }
 
     @classmethod
@@ -57,7 +59,7 @@ class Employee:
             name=data["name"],
             email=data["email"],
             password=data["password"],
-            vacation_balance=data.get("vacation_balance", 25)
+            vacation_balance=data.get("vacation_balance", 25),
         )
 
     # ------------------------------------------------------------------ #
@@ -114,7 +116,9 @@ class Employee:
         with open(FICHIER_DEMANDES, "w", encoding="utf-8") as f:
             json.dump(demandes, f, indent=4, ensure_ascii=False)
 
-    def soumettre_demande(self, start_date: date, end_date: date, reason: str = "") -> dict:
+    def soumettre_demande(
+        self, start_date: date, end_date: date, reason: str = ""
+    ) -> dict:
         """
         Soumet une nouvelle demande de congé.
         Vérifie les dates et le solde disponible.
@@ -129,7 +133,10 @@ class Employee:
 
         # Vérification du solde
         if days > self.vacation_balance:
-            raise ValueError(f"Solde insuffisant : {self.vacation_balance}j disponibles, {days}j demandés.")
+            raise ValueError(
+                f"Solde insuffisant : {self.vacation_balance}j disponibles, "
+                f"{days}j demandés."
+            )
 
         # Création de la demande
         demandes = self._charger_demandes()
@@ -143,7 +150,7 @@ class Employee:
             "end_date": str(end_date),
             "days": days,
             "reason": reason,
-            "status": "PENDING"
+            "status": "PENDING",
         }
 
         demandes.append(nouvelle_demande)
@@ -158,7 +165,10 @@ class Employee:
     def deduire_solde(self, jours: int) -> None:
         """Déduit des jours du solde après approbation."""
         if jours > self.vacation_balance:
-            raise ValueError(f"Solde insuffisant : {self.vacation_balance}j disponibles, {jours}j demandés.")
+            raise ValueError(
+                f"Solde insuffisant : {self.vacation_balance}j disponibles, "
+                f"{jours}j demandés."
+            )
         self.vacation_balance -= jours
 
     def annuler_demande(self, demande_id: int) -> bool:
@@ -168,7 +178,11 @@ class Employee:
         """
         demandes = self._charger_demandes()
         for d in demandes:
-            if d["id"] == demande_id and d["employee_id"] == self.id and d["status"] == "PENDING":
+            if (
+                d["id"] == demande_id
+                and d["employee_id"] == self.id
+                and d["status"] == "PENDING"
+            ):
                 d["status"] = "CANCELLED"
                 self._sauvegarder_demandes(demandes)
                 print(f"🚫 Demande {demande_id} annulée.")
@@ -181,5 +195,7 @@ class Employee:
     # ------------------------------------------------------------------ #
 
     def __repr__(self) -> str:
-        return (f"Employee(id={self.id}, name='{self.name}', "
-                f"email='{self.email}', solde={self.vacation_balance}j)")
+        return (
+            f"Employee(id={self.id}, name='{self.name}', "
+            f"email='{self.email}', solde={self.vacation_balance}j)"
+        )
