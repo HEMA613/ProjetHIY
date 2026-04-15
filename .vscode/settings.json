@@ -1,6 +1,6 @@
 
 {
     "python.analysis.extraPaths": [
-        "./front-end"
+        "./frontend"
     ]
 }

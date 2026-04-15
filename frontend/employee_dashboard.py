@@ -7,7 +7,7 @@ from datetime import date
 
 # Définition du répertoire de base pour ajuster les chemins d'importation
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-services_dir = os.path.join(BASE_DIR, "services")
+services_dir = os.path.join(BASE_DIR, "frontend", "services")
 sys.path.insert(0, services_dir)
 # Importation du service de gestion des congés
 from vacation_service import VacationService
@@ -43,10 +43,11 @@ def _label(parent, text, size=10, bold=False, fg=FG, bg=None, anchor="w"):
 # Classe principale pour le tableau de bord de l'employé
 class EmployeeDashboard:
     # Initialisation de la classe
-    def __init__(self, root, user):
-        self.root    = root  # Fenêtre principale Tkinter
-        self.user    = user  # Informations de l'utilisateur connecté
-        self.service = VacationService()  # Instance du service de congés
+    def __init__(self, root, user, on_logout=None):
+        self.root      = root  # Fenêtre principale Tkinter
+        self.user      = user  # Informations de l'utilisateur connecté
+        self.on_logout = on_logout  # Callback pour la déconnexion
+        self.service   = VacationService()  # Instance du service de congés
         self.cal_year  = date.today().year   # Année actuelle pour le calendrier
         self.cal_month = date.today().month  # Mois actuel pour le calendrier
 
@@ -65,6 +66,11 @@ class EmployeeDashboard:
         y = (self.root.winfo_screenheight() - 660) // 2  # Position y centrée
         self.root.geometry(f"920x660+{x}+{y}")  # Applique la géométrie
 
+    def _logout(self):
+        self.root.destroy()
+        if callable(self.on_logout):
+            self.on_logout()
+
     # ── Construction de la structure de l'interface ──────────────────────────────────────────────
     def _build(self):
         # Création de l'en-tête
@@ -73,6 +79,9 @@ class EmployeeDashboard:
         hdr.pack_propagate(False)  # Empêche le redimensionnement automatique
         _label(hdr, "✦  Gestion des Congés  ·  Espace Employee", 13, True, FG, ACCENT).pack(side="left", padx=22, pady=14)  # Titre à gauche
         _label(hdr, f"👤  {self.user['full_name']}", 10, False, "#c7d2fe", ACCENT).pack(side="right", padx=22)  # Nom de l'utilisateur à droite
+        tk.Button(hdr, text="Déconnexion", font=("Helvetica", 10, "bold"),
+                  bg=DANGER, fg=FG, activebackground="#dc2626",
+                  relief="flat", cursor="hand2", command=self._logout).pack(side="right", padx=12, pady=10)
 
         # Configuration du style du notebook (onglets)
         style = ttk.Style()

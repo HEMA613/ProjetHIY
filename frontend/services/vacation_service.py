@@ -45,7 +45,11 @@ class VacationService:
         return users
 
     def get_all_vacations(self):
-        return self._load_json(self.requests_file)
+        vacs = self._load_json(self.requests_file)
+        for v in vacs:
+            if isinstance(v.get("status"), str):
+                v["status"] = v["status"].lower()
+        return vacs
 
     def get_user_vacations(self, username):
         user = next((u for u in self.load_users() if u["username"] == username), None)
@@ -104,6 +108,7 @@ class VacationService:
         return new_req
 
     def update_status(self, request_id, status):
+        status = status.lower() if isinstance(status, str) else status
         demandes = self.get_all_vacations()
         updated = False
         for d in demandes:

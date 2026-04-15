@@ -6,7 +6,7 @@ from tkinter import messagebox
 # Permet de construire des chemins relatifs peu importe où on lance le script
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# On ajoute les dossiers front-end au PATH Python
+# On ajoute le dossier frontend au PATH Python
 # pour que Python trouve manager_dashboard.py et employee_dashboard.py
 sys.path.insert(0, os.path.join(BASE_DIR, "frontend"))
 
@@ -137,10 +137,14 @@ class LoginForm(tk.Tk):
         # Crée une nouvelle fenêtre Tkinter pour le dashboard
         root = tk.Tk()
         if user["role"] == "manager":
-            ManagerDashboard(root, user)   # dashboard avec droits admin
+            ManagerDashboard(root, user, on_logout=self._restart_login)   # dashboard avec droits admin
         else:
-            EmployeeDashboard(root, user)  # dashboard employé standard
+            EmployeeDashboard(root, user, on_logout=self._restart_login)  # dashboard employé standard
         root.mainloop()
+
+    def _restart_login(self):
+        app = LoginForm()
+        app.mainloop()
 
 
 if __name__ == "__main__":
