@@ -1,0 +1,34 @@
+[
+    {
+        "id": 1,
+        "nom": "Manager",
+        "email": "manager@gmail.com",
+        "password": "manager123",
+        "role": "manager",
+        "solde": 999
+    },
+    {
+        "id": 2,
+        "nom": "Jean Dupont",
+        "email": "jean@gmail.com",
+        "password": "jean123",
+        "role": "employe",
+        "solde": 25
+    },
+    {
+        "id": 3,
+        "nom": "Marie Martin",
+        "email": "marie@gmail.com",
+        "password": "marie123",
+        "role": "employe",
+        "solde": 20
+    },
+    {
+        "id": 4,
+        "nom": "Paul Bernard",
+        "email": "paul@gmail.com",
+        "password": "paul123",
+        "role": "employe",
+        "solde": 15
+    }
+]
