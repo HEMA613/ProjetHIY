@@ -72,7 +72,7 @@ class Employee:
             return []
         with open(FICHIER_JSON, "r", encoding="utf-8") as f:
             données = json.load(f)
-        return [Employé.from_dict(d) for d in données]
+        return [Employee.from_dict(d) for d in données]
 
     @staticmethod
     def sauvegarder_tous(employees: list["Employee"]) -> None:
@@ -99,7 +99,7 @@ class Employee:
     @staticmethod
     def trouver_par_id(id: int) -> "Employee | None":
         """Recherche un employé par son ID."""
-        for e in Employé.charger_tous():
+        for e in Employee.charger_tous():
             if e.id == id:
                 return e
         return None
