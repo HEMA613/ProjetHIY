@@ -6,18 +6,16 @@ from tkinter import messagebox
 # Permet de construire des chemins relatifs peu importe où on lance le script
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# On ajoute les dossiers front-end au PATH Python
+# On ajoute le dossier frontend au PATH Python
 # pour que Python trouve manager_dashboard.py et employee_dashboard.py
-sys.path.insert(0, os.path.join(BASE_DIR, "front-end"))
-sys.path.insert(0, os.path.join(BASE_DIR, "frontend", "hemadfront"))
+sys.path.insert(0, os.path.join(BASE_DIR, "frontend"))
 
 # Import des deux dashboards (selon le rôle de l'utilisateur connecté)
 from manager_dashboard import ManagerDashboard
 from employee_dashboard import EmployeeDashboard
 
 # Import du module backend pour initialiser les données au démarrage
-from backend import init_data
-
+from backend import init_data 
 
 def load_backend_users():
     """
@@ -90,15 +88,7 @@ class LoginForm(tk.Tk):
         # --- Chargement des utilisateurs depuis le backend ---
         self.users = load_backend_users()
 
-        # Si aucun utilisateur trouvé dans les fichiers JSON,
-        # on affiche des comptes de démo codés en dur
-        if not self.users:
-            self.demo("john@company.com",  "John Manager",    "manager",  card)
-            self.demo("sarah@company.com", "Sarah Employee",  "employee", card)
-        else:
-            # Sinon on affiche tous les vrais comptes comme raccourcis cliquables
-            for u in self.users:
-                self.demo(u["username"], u["full_name"], u["role"], card)
+
 
     def demo(self, email, full_name, role, parent):
         """
@@ -140,21 +130,24 @@ class LoginForm(tk.Tk):
         if not user:
             messagebox.showerror("Error", "Invalid credentials")
             return
-
+ 
         messagebox.showinfo("Success", f"Welcome {user['full_name']}!")
         self.destroy()  # ferme la fenêtre de login
 
         # Crée une nouvelle fenêtre Tkinter pour le dashboard
         root = tk.Tk()
         if user["role"] == "manager":
-            ManagerDashboard(root, user)   # dashboard avec droits admin
+            ManagerDashboard(root, user, on_logout=self._restart_login)   # dashboard avec droits admin
         else:
-            EmployeeDashboard(root, user)  # dashboard employé standard
+            EmployeeDashboard(root, user, on_logout=self._restart_login)  # dashboard employé standard
         root.mainloop()
+
+    def _restart_login(self):
+        app = LoginForm()
+        app.mainloop()
 
 
 if __name__ == "__main__":
     # Point d'entrée : on lance l'app uniquement si on exécute ce fichier directement
     app = LoginForm()
     app.mainloop()
-    

@@ -3,7 +3,7 @@ from datetime import date
 
 class VacationService:
     def __init__(self):
-        project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
+        project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
         backend_data = os.path.join(project_root, "backend", "data")
 
         self.requests_file = os.path.join(backend_data, "demandes.json")
@@ -45,17 +45,19 @@ class VacationService:
         return users
 
     def get_all_vacations(self):
-        return self._load_json(self.requests_file)
+        vacs = self._load_json(self.requests_file)
+        for v in vacs:
+            if isinstance(v.get("status"), str):
+                v["status"] = v["status"].lower()
+        return vacs
 
     def get_user_vacations(self, username):
         user = next((u for u in self.load_users() if u["username"] == username), None)
         if not user:
             return []
-        # Identifie par l'email (username)
         return [v for v in self.get_all_vacations()
                 if v.get("employee_email") == username or v.get("employee_name") == user.get("full_name")]
 
-    @staticmethod
     @staticmethod
     def _day_count(start_date, end_date):
         try:
@@ -82,7 +84,11 @@ class VacationService:
         demandes = self.get_all_vacations()
         next_id = max((d.get("id", 0) for d in demandes), default=0) + 1
 
-        user = next((u for u in self.load_users() if u["username"] == username), None)
+        all_users = self.load_users()
+        print(f"[DEBUG] username reçu: '{username}'")
+        print(f"[DEBUG] utilisateurs disponibles: {[u['username'] for u in all_users]}")
+
+        user = next((u for u in all_users if u["username"] == username), None)
         if not user:
             raise ValueError("Utilisateur introuvable")
 
@@ -104,6 +110,7 @@ class VacationService:
         return new_req
 
     def update_status(self, request_id, status):
+        status = status.lower() if isinstance(status, str) else status
         demandes = self.get_all_vacations()
         updated = False
         for d in demandes:
@@ -113,4 +120,3 @@ class VacationService:
         if updated:
             self._save_json(self.requests_file, demandes)
         return updated
-

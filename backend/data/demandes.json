@@ -7,7 +7,7 @@
         "end_date": "2025-07-05",
         "days": 5,
         "reason": "Vacances",
-        "status": "APPROVED"
+        "status": "approved"
     },
     {
         "id": 2,
@@ -17,7 +17,7 @@
         "end_date": "2025-08-12",
         "days": 3,
         "reason": "Famille",
-        "status": "REJECTED",
+        "status": "rejected",
         "motif_refus": "Période chargée"
     },
     {
@@ -28,7 +28,7 @@
         "end_date": "2025-10-03",
         "days": 3,
         "reason": "A annuler",
-        "status": "CANCELLED"
+        "status": "cancelled"
     },
     {
         "id": 4,
@@ -53,5 +53,17 @@
         "reason": "Maladie",
         "status": "pending",
         "submitted_date": "2026-04-03"
+    },
+    {
+        "id": 6,
+        "employee_id": null,
+        "employee_email": "jean@gmail.com",
+        "employee_name": "Jean Dupont",
+        "start_date": "2026-05-14",
+        "end_date": "2026-05-20",
+        "days": 7,
+        "reason": "test",
+        "status": "pending",
+        "submitted_date": "2026-04-15"
     }
 ]

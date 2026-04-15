@@ -7,8 +7,8 @@ from datetime import date
 
 # Définition du répertoire de base pour ajuster les chemins d'importation
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-# admin_dashboard est dans frontend/hemadfront, service dans le même dossier sous services
-services_dir = os.path.join(BASE_DIR, "hemadfront", "services")
+# ManagerDashboard est dans frontend ; le service est dans frontend/services
+services_dir = os.path.join(BASE_DIR, "frontend", "services")
 sys.path.insert(0, services_dir)
 # Importation du service de gestion des congés
 from vacation_service import VacationService
@@ -40,13 +40,14 @@ def _label(parent, text, size=10, bold=False, fg=FG, bg=None, anchor="w"):
     return tk.Label(parent, text=text, font=("Helvetica", size, w),
                     fg=fg, bg=bg, anchor=anchor)
 
-# Classe principale pour le tableau de bord du manager (noté admin dans le fichier)
+# Classe principale pour le tableau de bord du manager
 class ManagerDashboard:
     # Initialisation de la classe
-    def __init__(self, root, user):
-        self.root    = root  # Fenêtre principale Tkinter
-        self.user    = user  # Informations de l'utilisateur connecté
-        self.service = VacationService()  # Instance du service de congés
+    def __init__(self, root, user, on_logout=None):
+        self.root      = root  # Fenêtre principale Tkinter
+        self.user      = user  # Informations de l'utilisateur connecté
+        self.on_logout = on_logout  # Callback pour la déconnexion
+        self.service   = VacationService()  # Instance du service de congés
         self.cal_year  = date.today().year   # Année actuelle pour le calendrier
         self.cal_month = date.today().month  # Mois actuel pour le calendrier
 
@@ -65,6 +66,11 @@ class ManagerDashboard:
         y = (self.root.winfo_screenheight() - 680) // 2  # Position y centrée
         self.root.geometry(f"980x680+{x}+{y}")  # Applique la géométrie
 
+    def _logout(self):
+        self.root.destroy()
+        if callable(self.on_logout):
+            self.on_logout()
+
     # ── Construction de la structure de l'interface ──────────────────────────────────────────────
     def _build(self):
         # Création de l'en-tête
@@ -73,6 +79,9 @@ class ManagerDashboard:
         hdr.pack_propagate(False)  # Empêche le redimensionnement automatique
         _label(hdr, "✦  Gestion des Congés  ·  Management", 13, True, FG, ACCENT).pack(side="left", padx=22, pady=14)  # Titre à gauche
         _label(hdr, f"👤  {self.user['full_name']}", 10, False, "#c7d2fe", ACCENT).pack(side="right", padx=22)  # Nom de l'utilisateur à droite
+        tk.Button(hdr, text="Déconnexion", font=("Helvetica", 10, "bold"),
+                  bg=DANGER, fg=FG, activebackground="#dc2626",
+                  relief="flat", cursor="hand2", command=self._logout).pack(side="right", padx=12, pady=10)
 
         # Configuration du style du notebook (onglets)
         style = ttk.Style()
@@ -189,7 +198,8 @@ class ManagerDashboard:
         for v in reversed(vacs):  # Parcourt les demandes en ordre inverse (plus récentes en haut)
             if flt != "all" and v["status"] != flt:  # Applique le filtre
                 continue
-            name   = users.get(v["username"], v["username"])  # Nom complet ou identifiant
+            requester = v.get("employee_email") or v.get("username") or v.get("employee_name")  # Identifiant du demandeur
+            name   = users.get(requester, requester)  # Nom complet ou identifiant
             days   = VacationService.count_days(v["start_date"], v["end_date"])  # Nombre de jours
             _, _, slabel = STATUS_CFG.get(v["status"], ("", "", v["status"]))  # Label du statut
             self.tree.insert("", "end", iid=str(v["id"]),  # Insère la ligne dans le tableau
