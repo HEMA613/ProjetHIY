@@ -8,8 +8,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # On ajoute les dossiers front-end au PATH Python
 # pour que Python trouve manager_dashboard.py et employee_dashboard.py
-sys.path.insert(0, os.path.join(BASE_DIR, "front-end"))
-sys.path.insert(0, os.path.join(BASE_DIR, "frontend", "hemadfront"))
+sys.path.insert(0, os.path.join(BASE_DIR, "frontend"))
 
 # Import des deux dashboards (selon le rôle de l'utilisateur connecté)
 from manager_dashboard import ManagerDashboard

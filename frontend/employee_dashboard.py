@@ -7,7 +7,7 @@ from datetime import date
 
 # Définition du répertoire de base pour ajuster les chemins d'importation
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-services_dir = os.path.join(BASE_DIR, "hemadfront", "services")
+services_dir = os.path.join(BASE_DIR, "services")
 sys.path.insert(0, services_dir)
 # Importation du service de gestion des congés
 from vacation_service import VacationService

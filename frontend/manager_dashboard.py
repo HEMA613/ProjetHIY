@@ -7,8 +7,8 @@ from datetime import date
 
 # Définition du répertoire de base pour ajuster les chemins d'importation
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-# admin_dashboard est dans frontend/hemadfront, service dans le même dossier sous services
-services_dir = os.path.join(BASE_DIR, "hemadfront", "services")
+# ManagerDashboard est dans front-end ; le service est dans frontend/services
+services_dir = os.path.join(BASE_DIR, "frontend", "services")
 sys.path.insert(0, services_dir)
 # Importation du service de gestion des congés
 from vacation_service import VacationService
@@ -40,7 +40,7 @@ def _label(parent, text, size=10, bold=False, fg=FG, bg=None, anchor="w"):
     return tk.Label(parent, text=text, font=("Helvetica", size, w),
                     fg=fg, bg=bg, anchor=anchor)
 
-# Classe principale pour le tableau de bord du manager (noté admin dans le fichier)
+# Classe principale pour le tableau de bord du manager
 class ManagerDashboard:
     # Initialisation de la classe
     def __init__(self, root, user):
@@ -189,7 +189,8 @@ class ManagerDashboard:
         for v in reversed(vacs):  # Parcourt les demandes en ordre inverse (plus récentes en haut)
             if flt != "all" and v["status"] != flt:  # Applique le filtre
                 continue
-            name   = users.get(v["username"], v["username"])  # Nom complet ou identifiant
+            requester = v.get("employee_email") or v.get("username") or v.get("employee_name")  # Identifiant du demandeur
+            name   = users.get(requester, requester)  # Nom complet ou identifiant
             days   = VacationService.count_days(v["start_date"], v["end_date"])  # Nombre de jours
             _, _, slabel = STATUS_CFG.get(v["status"], ("", "", v["status"]))  # Label du statut
             self.tree.insert("", "end", iid=str(v["id"]),  # Insère la ligne dans le tableau
