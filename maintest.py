@@ -23,27 +23,35 @@ def load_backend_users():
     Cherche les managers dans manager.json et les employés dans employes.json.
     Retourne une liste de dictionnaires unifiés avec les champs :
     username, password, full_name, role, total_days.
+    
+    Cette fonction est cruciale pour l'authentification car elle fournit
+    la liste des utilisateurs valides à la classe LoginForm.
     """
     users = []
 
     # On parcourt les deux fichiers JSON : un pour les managers, un pour les employés
+    # Utilisation d'une boucle pour éviter la duplication de code
     for path, role in [
         (os.path.join(BASE_DIR, "backend", "data", "manager.json"), "manager"),
         (os.path.join(BASE_DIR, "backend", "data", "employes.json"), "employee"),
     ]:
         # Si le fichier n'existe pas encore, on le saute sans planter
+        # Cela permet de lancer l'app même si les données ne sont pas initialisées
         if not os.path.exists(path):
             continue
 
+        # Lecture du fichier JSON avec encodage UTF-8 pour supporter les caractères spéciaux
         with open(path, "r", encoding="utf-8") as f:
             records = json.load(f)
 
+        # Conversion des enregistrements JSON en format standardisé pour l'authentification
+        # Chaque utilisateur devient un dict avec des clés uniformes
         for r in records:
             users.append({
                 "username":   r.get("email"),       # l'email sert d'identifiant de connexion
-                "password":   r.get("password", ""),
-                "full_name":  r.get("name"),
-                "role":       role,
+                "password":   r.get("password", ""), # mot de passe (vide par défaut si manquant)
+                "full_name":  r.get("name"),         # nom complet pour l'affichage
+                "role":       role,                  # "manager" ou "employee"
                 # Les employés ont un solde de congés limité, les managers ont 9999 (illimité)
                 "total_days": r.get("vacation_balance", 25) if role == "employee" else 9999,
             })
@@ -51,100 +59,126 @@ def load_backend_users():
 
 
 class LoginForm(tk.Tk):
-    """Fenêtre de connexion principale — point d'entrée de l'application."""
+    """
+    Fenêtre de connexion principale — point d'entrée de l'application.
+    
+    Cette classe gère l'authentification des utilisateurs et lance le dashboard
+    approprié selon leur rôle (manager ou employé). Elle hérite de tk.Tk pour
+    créer une fenêtre racine Tkinter avec une interface moderne et centrée.
+    """
 
     def __init__(self):
+        # Appel du constructeur parent pour initialiser la fenêtre Tkinter
         super().__init__()
-        self.title("Vacation Manager - Login")
-        self.geometry("420x420")
-        self.configure(bg="#f0f2f5")
-        self.resizable(False, False)  # fenêtre non redimensionnable
+        
+        # Configuration de base de la fenêtre
+        self.title("Vacation Manager - Login")  # Titre affiché dans la barre
+        self.geometry("420x420")  # Dimensions fixes de la fenêtre
+        self.configure(bg="#f0f2f5")  # Couleur de fond gris clair
+        self.resizable(False, False)  # Empêche le redimensionnement par l'utilisateur
 
-        # --- Carte blanche centrée (effet "modal card") ---
-        card = tk.Frame(self, bg="white", bd=0, relief="flat")
-        card.place(relx=0.5, rely=0.5, anchor="center", width=330, height=360)
+        # Chargement des utilisateurs depuis le backend pour l'authentification
+        # Cette liste est utilisée dans login() pour valider les identifiants
+        # ET dans _build() pour créer les boutons de démonstration
+        self.users = load_backend_users()
 
-        # --- Titre et sous-titre ---
-        tk.Label(card, text="Vacation Manager",
-                 font=("Segoe UI", 18, "bold"), bg="white").pack(pady=(20, 0))
-        tk.Label(card, text="Sign in to manage your time off",
-                 font=("Segoe UI", 10), fg="#555", bg="white").pack(pady=(0, 20))
+        # Construction de l'interface utilisateur (champs, boutons, etc.)
+        self._build()
 
-        # --- Champ identifiant (email) ---
+        # Centrage automatique sur l'écran (à la fin, après construction complète)
+        self._center()
+
+    def _center(self):
+        """Centre la fenêtre sur l'écran en calculant les coordonnées optimales."""
+        self.update_idletasks()  # Met à jour la géométrie interne avant calcul
+        x = (self.winfo_screenwidth() - 420) // 2   # Position X centrée
+        y = (self.winfo_screenheight() - 420) // 2  # Position Y centrée
+        self.geometry(f"420x420+{x}+{y}")  # Application de la nouvelle position
+
+    def _build(self):
+        """
+        Construit l'interface de connexion avec tous les éléments visuels.
+        
+        Utilise un design "modal card" : une carte blanche centrée sur fond gris,
+        contenant le formulaire de connexion et les boutons de démonstration.
+        """
+        # Frame externe pour centrer le contenu sur la fenêtre
+        outer = tk.Frame(self, bg="#f0f2f5")
+        outer.place(relx=0.5, rely=0.5, anchor="center", width=330, height=360)
+
+        # Zone du titre avec texte
+        tk.Label(outer, text="Vacation Manager", font=("Segoe UI", 18, "bold"), bg="#f0f2f5").pack(pady=(20, 2))
+        tk.Label(outer, text="Sign in to manage your time off", font=("Segoe UI", 10), fg="#555", bg="#f0f2f5").pack(pady=(0, 20))
+
+        # Carte blanche contenant le formulaire (effet modal)
+        card = tk.Frame(outer, bg="white", bd=0, relief="flat")
+        card.pack(fill="x")
+
+        # Champ email avec son label
         tk.Label(card, text="Email Address", font=("Segoe UI", 10), bg="white").pack(anchor="w", padx=30)
         self.username_entry = tk.Entry(card, font=("Segoe UI", 11), bd=1, relief="solid")
         self.username_entry.pack(padx=30, pady=5, fill="x")
 
-        # --- Champ mot de passe (masqué avec show="*") ---
+        # Champ mot de passe masqué avec son label
         tk.Label(card, text="Password", font=("Segoe UI", 10), bg="white").pack(anchor="w", padx=30)
         self.password_entry = tk.Entry(card, font=("Segoe UI", 11), bd=1, relief="solid", show="*")
         self.password_entry.pack(padx=30, pady=5, fill="x")
 
-        # --- Bouton de connexion ---
+        # Bouton de connexion stylisé
         tk.Button(card, text="Sign In", font=("Segoe UI", 11, "bold"),
                   bg="#1a73e8", fg="white", activebackground="#1666c4",
                   relief="flat", command=self.login).pack(pady=15, ipadx=10, ipady=5)
 
-        # --- Chargement des utilisateurs depuis le backend ---
-        self.users = load_backend_users()
-
-
-
-    def demo(self, email, full_name, role, parent):
-        """
-        Affiche un raccourci cliquable pour remplir automatiquement
-        les champs email/mot de passe (utile en démo ou développement).
-        """
-        frame = tk.Frame(parent, bg="white")
-        frame.pack(pady=2)
-
-        label = tk.Label(frame,
-                         text=f"{email} — {full_name} ({role})",
-                         font=("Segoe UI", 9), fg="#1a73e8", bg="white", cursor="hand2")
-        label.pack()
-        # Au clic, on remplit automatiquement le formulaire avec cet email
-        label.bind("<Button-1>", lambda e: self.autofill(email))
-
-    def autofill(self, email):
-        """Remplit les champs de connexion avec l'email choisi et le mot de passe 'demo'."""
-        self.username_entry.delete(0, tk.END)
-        self.username_entry.insert(0, email)
-        self.password_entry.delete(0, tk.END)
-        self.password_entry.insert(0, "demo")
-
     def login(self):
         """
-        Vérifie les identifiants saisis.
-        Si corrects → ferme le login et ouvre le dashboard correspondant au rôle.
-        Si incorrects → affiche un message d'erreur.
+        Valide les identifiants saisis et lance le dashboard approprié.
+        
+        Cette méthode est appelée lors du clic sur le bouton "Sign In".
+        Elle recherche l'utilisateur dans la liste chargée, puis ouvre
+        soit le dashboard manager, soit employé, selon le rôle.
         """
-        username = self.username_entry.get()
-        password = self.password_entry.get()
+        username = self.username_entry.get().strip()  # Récupère et nettoie l'email
+        password = self.password_entry.get().strip()  # Récupère et nettoie le mot de passe
 
-        # Recherche d'un utilisateur dont l'email ET le mot de passe correspondent
+        # Recherche linéaire de l'utilisateur correspondant
+        # Utilise next() avec générateur pour trouver le premier match
         user = next(
             (u for u in self.users if u["username"] == username and u["password"] == password),
-            None  # valeur par défaut si rien trouvé
+            None  # Retourne None si aucun utilisateur trouvé
         )
 
         if not user:
-            messagebox.showerror("Error", "Invalid credentials")
+            # Affichage d'une boîte de dialogue d'erreur
+            messagebox.showerror("Erreur", "Identifiants invalides")
             return
  
-        messagebox.showinfo("Success", f"Welcome {user['full_name']}!")
-        self.destroy()  # ferme la fenêtre de login
+        # Message de succès avec le nom de l'utilisateur
+        messagebox.showinfo("Succès", f"Bienvenue {user['full_name']}!")
 
-        # Crée une nouvelle fenêtre Tkinter pour le dashboard
+        # Fermeture de la fenêtre de login
+        self.destroy()
+
+        # Création d'une nouvelle fenêtre racine pour le dashboard
         root = tk.Tk()
         if user["role"] == "manager":
-            ManagerDashboard(root, user, on_logout=self._restart_login)   # dashboard avec droits admin
+            # Instanciation du dashboard manager avec callback de déconnexion
+            ManagerDashboard(root, user, on_logout=self._restart_login)
         else:
-            EmployeeDashboard(root, user, on_logout=self._restart_login)  # dashboard employé standard
+            # Instanciation du dashboard employé avec callback de déconnexion
+            EmployeeDashboard(root, user, on_logout=self._restart_login)
+        
+        # Lancement de la boucle principale Tkinter pour le dashboard
         root.mainloop()
 
     def _restart_login(self):
-        app = LoginForm()
-        app.mainloop()
+        """
+        Callback appelé lors de la déconnexion depuis un dashboard.
+        
+        Cette méthode recrée une nouvelle instance de LoginForm,
+        permettant à l'utilisateur de se reconnecter avec un autre compte.
+        """
+        app = LoginForm()  # Nouvelle instance
+        app.mainloop()     # Lancement de la boucle
 
 
 if __name__ == "__main__":
