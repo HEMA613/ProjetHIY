@@ -7,7 +7,8 @@
         "end_date": "2025-07-05",
         "days": 5,
         "reason": "Vacances",
-        "status": "approved"
+        "status": "approved",
+        "employee_email": "jean@gmail.com"
     },
     {
         "id": 2,
@@ -18,7 +19,8 @@
         "days": 3,
         "reason": "Famille",
         "status": "rejected",
-        "motif_refus": "Période chargée"
+        "motif_refus": "Période chargée",
+        "employee_email": "jean@gmail.com"
     },
     {
         "id": 3,
@@ -28,7 +30,8 @@
         "end_date": "2025-10-03",
         "days": 3,
         "reason": "A annuler",
-        "status": "cancelled"
+        "status": "approved",
+        "employee_email": "jean@gmail.com"
     },
     {
         "id": 4,
@@ -39,7 +42,7 @@
         "end_date": "2026-06-06",
         "days": 6,
         "reason": "dmhbeqc",
-        "status": "pending",
+        "status": "rejected",
         "submitted_date": "2026-04-03"
     },
     {
@@ -51,7 +54,7 @@
         "end_date": "2026-06-06",
         "days": 6,
         "reason": "Maladie",
-        "status": "pending",
+        "status": "approved",
         "submitted_date": "2026-04-03"
     },
     {
@@ -63,7 +66,7 @@
         "end_date": "2026-05-20",
         "days": 7,
         "reason": "test",
-        "status": "pending",
+        "status": "rejected",
         "submitted_date": "2026-04-15"
     }
 ]

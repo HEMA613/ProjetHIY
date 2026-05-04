@@ -82,6 +82,6 @@ Ce résumé permet de comprendre la structure globale sans plonger dans le code 
 
 3- Ajoutez un boutton pour approuver et accepter les demandes dans le manager dashboard.
 
-4-
+4- Ajoutez un bar pour confirmer le mot de passe de connexion.
 
 5-

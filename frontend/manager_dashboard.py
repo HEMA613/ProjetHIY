@@ -13,37 +13,21 @@ services_dir = os.path.join(BASE_DIR, "frontend", "services")
 sys.path.insert(0, services_dir)
 
 from vacation_service import VacationService
-
-# ── Palette de couleurs pour l'interface ───────────────
-# Couleurs de base pour le thème sombre
-BG = "#0f172a"  # Couleur de fond principale
-PANEL = "#1e293b"  # Couleur des panneaux
-CARD = "#263348"  # Couleur des cartes
-ACCENT = "#6366f1"  # Couleur d'accent (bleu)
-SUCCESS = "#22c55e"  # Couleur pour le succès (vert)
-WARNING = "#f59e0b"  # Couleur pour les avertissements (jaune)
-DANGER = "#ef4444"  # Couleur pour les erreurs (rouge)
-FG = "#f8fafc"  # Couleur du texte principal
-MUTED = "#94a3b8"  # Couleur du texte atténué
-BORDER = "#334155"  # Couleur des bordures
-
-# Configuration des statuts des demandes de congé
-STATUS_CFG = {
-    "pending": ("#451a03", "#f59e0b", "⏳ En attente"),  # Statut en attente
-    "approved": ("#052e16", "#22c55e", "✅ Approuvé"),  # Statut approuvé
-    "rejected": ("#450a0a", "#ef4444", "❌ Refusé"),  # Statut refusé
-}
-
-
-# Fonction helper pour créer des labels avec des paramètres par défaut
-def _label(parent, text, size=10, bold=False, fg=FG, bg=None, anchor="w"):
-    bg = bg or parent.cget(
-        "bg"
-    )  # Utilise la couleur de fond du parent si non spécifiée
-    w = "bold" if bold else "normal"  # Définit le poids de la police
-    return tk.Label(
-        parent, text=text, font=("Helvetica", size, w), fg=fg, bg=bg, anchor=anchor
-    )
+from dashboard_common import (
+    ACCENT,
+    BG,
+    BORDER,
+    CARD,
+    DANGER,
+    FG,
+    MUTED,
+    PANEL,
+    SUCCESS,
+    WARNING,
+    STATUS_CFG,
+    _label,
+    setup_notebook_style,
+)
 
 
 # Classe principale pour le tableau de bord du manager
@@ -102,21 +86,7 @@ class ManagerDashboard:
         ).pack(side="right", padx=12, pady=10)
 
         # Configuration du style du notebook (onglets)
-        style = ttk.Style()
-        style.theme_use("default")  # Utilise le thème par défaut
-        style.configure("TNotebook", background=BG, borderwidth=0)  # Style du notebook
-        style.configure(
-            "TNotebook.Tab",
-            background=PANEL,
-            foreground=MUTED,
-            font=("Helvetica", 10),
-            padding=[18, 8],
-        )  # Style des onglets
-        style.map(
-            "TNotebook.Tab",
-            background=[("selected", CARD)],  # Couleur quand sélectionné
-            foreground=[("selected", FG)],
-        )
+        setup_notebook_style()
 
         # Création du notebook avec les onglets
         nb = ttk.Notebook(self.root)

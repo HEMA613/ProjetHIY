@@ -120,6 +120,13 @@ class VacationService:
         for v in vacs:
             if isinstance(v.get("status"), str):
                 v["status"] = v["status"].lower()
+            # Ajoute "employee_email" si manquant mais que "employee_name" existe
+            if "employee_email" not in v and "employee_name" in v:
+                # Cherche l'email correspondant au nom
+                for emp in self._load_json(self.employees_file):
+                    if emp.get("name") == v.get("employee_name"):
+                        v["employee_email"] = emp.get("email")
+                        break
         return vacs
 
     def get_user_vacations(self, username):

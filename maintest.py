@@ -1,6 +1,5 @@
 import os
 import sys
-import json
 import tkinter as tk
 from tkinter import messagebox
 
@@ -11,65 +10,18 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 # On ajoute le dossier frontend au PATH Python
 # pour que Python trouve manager_dashboard.py et employee_dashboard.py
 sys.path.insert(0, os.path.join(BASE_DIR, "frontend"))
+# On ajoute aussi le service de gestion des congés.
+sys.path.insert(0, os.path.join(BASE_DIR, "frontend", "services"))
 
 # Import des deux dashboards (selon le rôle de l'utilisateur connecté)
 from employee_dashboard import EmployeeDashboard
 from manager_dashboard import ManagerDashboard
-
-# Import du module backend pour initialiser les données au démarrage
+from vacation_service import VacationService
 
 
 def load_backend_users():
-    """
-    Charge les utilisateurs depuis les fichiers JSON du backend.
-    Cherche les managers dans manager.json et les employés dans employes.json.
-    Retourne une liste de dictionnaires unifiés avec les champs :
-    username, password, full_name, role, total_days.
-
-    Cette fonction est cruciale pour l'authentification car elle fournit
-    la liste des utilisateurs valides à la classe LoginForm.
-    """
-    users = []
-
-    # On parcourt les deux fichiers JSON
-    # Boucle pour éviter duplication de code
-    manager_path = os.path.join(BASE_DIR, "backend", "data", "manager.json")
-    employe_path = os.path.join(BASE_DIR, "backend", "data", "employes.json")
-    for path, role in [
-        (manager_path, "manager"),
-        (employe_path, "employee"),
-    ]:
-        # Si le fichier n'existe pas encore, on le saute sans planter
-        # Cela permet de lancer l'app même si les données ne sont pas
-        # initialisées
-        if not os.path.exists(path):
-            continue
-
-        # Lecture du fichier JSON avec encodage UTF-8 pour supporter les
-        # caractères spéciaux
-        with open(path, "r", encoding="utf-8") as f:
-            records = json.load(f)
-
-        # Conversion des enregistrements JSON en format standardisé
-        # pour l'authentification
-        # Chaque utilisateur devient un dict avec des clés
-        # uniformes
-        for r in records:
-            users.append(
-                {
-                    # l'email sert d'identifiant de connexion
-                    "username": r.get("email"),
-                    # mot de passe (vide par défaut si manquant)
-                    "password": r.get("password", ""),
-                    # nom complet pour l'affichage
-                    "full_name": r.get("name"),
-                    "role": role,  # "manager" ou "employee"
-                    "total_days": (
-                        r.get("vacation_balance", 25) if role == "employee" else 9999
-                    ),
-                }
-            )
-    return users
+    """Charge les utilisateurs du backend en utilisant VacationService."""
+    return VacationService().load_users()
 
 
 class LoginForm(tk.Tk):
