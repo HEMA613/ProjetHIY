@@ -179,7 +179,7 @@ class LoginForm(tk.Tk):
 
 
 if __name__ == "__main__":
-    # Point d'entrée : on lance l'app uniquement si on exécute ce fichier
+    # Point d'entrée 
     # directement
     app = LoginForm()
     app.mainloop()
